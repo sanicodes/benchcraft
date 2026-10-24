@@ -27,8 +27,10 @@ import git.artdeell.mojo.contracts.OpenDocumentWithExtension;
 import git.artdeell.mojo.extra.ExtraConstants;
 import git.artdeell.mojo.extra.ExtraCore;
 import git.artdeell.mojo.fragments.misc.GamepadMapperFragment;
+import git.artdeell.mojo.fragments.modding.ModManagerFragment;
 import git.artdeell.mojo.instances.Instance;
 import git.artdeell.mojo.instances.Instances;
+import git.artdeell.mojo.modding.modmanager.ModTarget;
 import git.artdeell.mojo.utils.FileUtils;
 
 import java.io.File;
@@ -49,8 +51,7 @@ public class MainMenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button mNewsButton = view.findViewById(R.id.news_button);
-        Button mDiscordButton = view.findViewById(R.id.social_media_button);
+        Button mManageModsButton = view.findViewById(R.id.manage_mods_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
         Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
@@ -60,8 +61,7 @@ public class MainMenuFragment extends Fragment {
         Button mPlayButton = view.findViewById(R.id.play_button);
         mVersionSpinner = view.findViewById(R.id.mc_version_spinner);
 
-        mNewsButton.setOnClickListener(v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
-        mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.social_media_invite)));
+        mManageModsButton.setOnClickListener(v -> openModManager(v.getContext()));
         mCustomControlButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
         mInstallJarButton.setOnClickListener(v -> runInstallerWithConfirmation());
         mEditProfileButton.setOnClickListener(v -> mVersionSpinner.openProfileEditor(requireActivity()));
@@ -73,10 +73,23 @@ public class MainMenuFragment extends Fragment {
         mOpenDirectoryButton.setOnClickListener((v)-> openGameDirectory(v.getContext()));
 
 
-        mNewsButton.setOnLongClickListener((v)->{
+        mCustomControlButton.setOnLongClickListener((v)->{
             Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
             return true;
         });
+    }
+
+    private void openModManager(Context context) {
+        Instance instance = Instances.loadSelectedInstance();
+        if(instance == null) {
+            Toast.makeText(context, R.string.no_instance, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(ModTarget.detectPlatform(instance) == null) {
+            Toast.makeText(context, R.string.main_manage_mods_no_loader, Toast.LENGTH_LONG).show();
+            return;
+        }
+        Tools.swapFragment(requireActivity(), ModManagerFragment.class, ModManagerFragment.TAG, null);
     }
 
     private void openGameDirectory(Context context) {
