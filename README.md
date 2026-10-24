@@ -1,79 +1,77 @@
-<H1 align="center">MojoLauncher (a.k.a. MJLauncher)</H1>
+<H1 align="center">Benchcraft</H1>
 
-<a href="./README_RU.md">Readme на русском</a>
+<img src="./app_mojo/src/main/ic_launcher-playstore.png" align="left" width="150" height="150" alt="Benchcraft logo">
 
-<img src="./app_mojo/src/main/assets/mojo.png" align="left" width="150" height="150" alt="MojoLauncher logo">
+* Benchcraft is a launcher that lets you play Minecraft: Java Edition on your Android device.
 
-[![Android CI](https://github.com/MojoLauncher/MojoLauncher/workflows/Android%20CI/badge.svg)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MojoLauncher/MojoLauncher)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![Discord](https://img.shields.io/discord/1365346109131722753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/VHdwQFsaGX)
+* It's a fork of [MojoLauncher](https://github.com/MojoLauncher/MojoLauncher) (itself based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)) with a redesigned interface and a built-in mod manager.
 
-* MojoLauncher is a launcher, based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher), that allows you to play Minecraft: Java Edition on your Android device!
+* It can run almost every version of Minecraft, and supports Forge, Fabric, Quilt and NeoForge, as well as .jar installers like [OptiFine](https://optifine.net).
 
-* It can run almost every version of Minecraft, allowing you to use .jar only installers to install modloaders such as [Forge](https://files.minecraftforge.net/) and [Fabric](http://fabricmc.net/) and mods like [OptiFine](https://optifine.net).
+<br clear="left">
 
 ## Navigation
-- [Introduction](#introduction)
-- [Getting MojoLauncher](#getting-mojolauncher)
-- [Building](#building) 
-- [Current roadmap](#current-roadmap) 
-- [License](#license) 
-- [Contributing](#contributing) 
-- [Credits & Third party components and their licenses](#credits--third-party-components-and-their-licenses-if-available)
+- [Features](#features)
+- [Getting Benchcraft](#getting-benchcraft)
+- [Building](#building)
+- [Relationship to MojoLauncher](#relationship-to-mojolauncher)
+- [Known issues](#known-issues)
+- [License](#license)
+- [Contributing](#contributing)
+- [Credits, third party components and their licenses](#credits-third-party-components-and-their-licenses)
 
-## Introduction 
-* MojoLauncher is a Minecraft: Java Edition launcher for Android based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
-* This launcher can launch almost all available Minecraft versions ranging from rd-132211 to 26.x snapshots (including Combat Test versions). 
-* Modding via Forge and Fabric are also supported. 
+## Features
+* **Dark, Modrinth-style interface** across the launcher, dialogs and settings
+* **Dashboard** with your current instance, quick actions and a big Play button
+* **Mod manager**: browse and install mods, resource packs and shaders from [Modrinth](https://modrinth.com), and turn installed mods on or off without deleting them
+* **Instance icons**: pick a built-in icon, upload your own image, or use the icon of any Modrinth project
+* Everything MojoLauncher can do:
+  * Minecraft versions from rd-132211 to 26.x snapshots, including Combat Test versions
+  * Microsoft, Ely.by and local accounts
+  * mrpack and CurseForge modpack import
 
-## Getting MojoLauncher
+## Getting Benchcraft
+There are no prebuilt releases yet. Once there are, they'll be on the [releases page](https://github.com/sanicodes/benchcraft/releases). For now, [build it](#building) from source.
 
-You can get MojoLauncher via four methods:
+Benchcraft has its own package ID (`io.github.sanicodes.benchcraft`), so it installs next to MojoLauncher instead of replacing it. The two don't share instances or accounts.
 
-1. You can get the prebuilt app from the [releases section](http://github.com/mojolauncher/mojolauncher/releases).
-
-2. You can get it from Google Play by clicking on this badge:
-[![Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=git.artdeell.mjlaunch)
-
-3. You can get early builds from [Github Actions](http://github.com/mojolauncher/mojolauncher/actions).
-
-4. You can [build](#building) from source.
-## Building   
-* Build the launcher (it will automatically download all required components)
+## Building
+Clone with submodules, then build. Gradle downloads the other components it needs.
 ```
-./gradlew :app_mojo:assembleDebug
+git clone --recursive https://github.com/sanicodes/benchcraft.git
+cd benchcraft
+./gradlew :app_mojo:assembleFullDebug
 ```
+
+To build a release APK instead:
+```
+./gradlew :app_mojo:assembleFullBenchcraft
+```
+The APK ends up in `app_mojo/build/outputs/apk/full/benchcraft/`. It's signed with the debug key that's checked into the repo. That key is public, so this build is meant for personal installs, not for distribution.
+
+Build one variant per Gradle run. Building two at once (for example debug and release) fails, because they share their download folders.
+
 If you are building on Windows:
 * Replace `./gradlew` with `.\gradlew.bat`
-* Make sure `mojoexec`, `sdl`, `glfw` are symlinked into `app_pojavlauncher/src/main/jni/`
+* Make sure `mojoexec`, `sdl` and `glfw` are symlinked into `app_mojo/src/main/jni/`
 
-## Current roadmap
-- [x] Instance system in favor of profiles
-- [x] Out-of-the box 1.21.5 support
-- [x] mrpack/CurseForge zip import
-- [x] LTW: enable compute shader/image extensions
-- [ ] LTW: resolve issues with Create
-- [ ] LTW: switch to a color-renderable format for framebuffers
-- [ ] Modpack/mod management tool
-- [ ] MMC-compatible instance import
-- [ ] Vintage Story support
-- [ ] Implement common native library standard
+## Relationship to MojoLauncher
+Benchcraft branched off from MojoLauncher. The game runtime, renderers and most of the launcher are MojoLauncher's work, and Benchcraft regularly merges in their changes. The internal code (the `git.artdeell.mojo` Java package, native libraries and plugin IDs) keeps MojoLauncher's names so those merges stay easy.
 
-## Known Issues
+Please report Benchcraft bugs [here](https://github.com/sanicodes/benchcraft/issues), not to the MojoLauncher team.
+
+## Known issues
 - Some physical mice may have very slow mouse speed
 - On Holy GL4ES, large texture atlases may be distorted (resulting in stretched/blocky textures in modpacks)
-- Probably more, that's why we have a bug tracker ;) 
 
 ## License
-- MojoLauncher is licensed under [GNU LGPLv3](https://github.com/MojoLauncher/MojoLauncher/blob/v3_openjdk/LICENSE).
+- Benchcraft is licensed under [GNU LGPLv3](./LICENSE), like MojoLauncher.
 
 ## Contributing
-Contributions are welcome! We appreciate any type of contribution, not only code. For example, you can help the wiki shape up. You can help the [translation](https://mojolauncher.ru/translate/translator.html) too!
+Contributions are welcome! Open a pull request on this repository. The description should explain what the change does and how to test it.
 
-
-Any code change to this repository should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
-
-## Third party components, licenses and sources (when applicable)
+## Credits, third party components and their licenses
+- [MojoLauncher](https://github.com/MojoLauncher/MojoLauncher), which Benchcraft is a fork of: [GNU LGPLv3 License](https://github.com/MojoLauncher/MojoLauncher/blob/v3_openjdk/LICENSE)
 - [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GNU LGPLv3 License](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
 - Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
 - [Holy GL4ES](https://github.com/artdeell/gl4es_extra_extra/): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).
@@ -88,4 +86,5 @@ Any code change to this repository should be submitted as a pull request. The de
 - [Authlib-Injector](https://github.com/yushijinhun/authlib-injector) (Used for authorisation via ely.by): [AGPL-3.0](https://github.com/yushijinhun/authlib-injector/blob/develop/LICENSE).
 - [alsoft](https://github.com/kcat/openal-soft/) (Audio output library): [GNU Library General Public License](https://github.com/kcat/openal-soft/blob/master/COPYING) and [Modified PFFFT](https://github.com/kcat/openal-soft/blob/master/LICENSE-pffft).
 - [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
+- [Modrinth](https://modrinth.com) for the mod, resource pack and shader catalogue.
 - Thanks to [Mineskin](https://mineskin.eu/) for providing Minecraft avatars.
