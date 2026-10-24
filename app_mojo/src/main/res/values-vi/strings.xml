@@ -230,7 +230,7 @@
     <string name="color_default_hex" translatable="false">FFFF0000</string>
     <string name="notif_channel_name">Chung</string>
     <string name="notif_channel_id" translatable="false">channel_id</string>
-    <string name="lazy_service_default_title">Dịch vụ tiền cảnh MJ</string>
+    <string name="lazy_service_default_title">Dịch vụ tiền cảnh Benchcraft</string>
     <string name="mcl_setting_veroption_installed">Đã cài đặt</string>
     <string name="use_global_default">(Sử dụng mặc định chung)</string>
     <string name="default_control">Bố cục bố cục điều khiển mặc định</string>
@@ -409,7 +409,6 @@
     <string name="controller_remapper_expand_entry">Mở rộng để thay đổi mã phím</string>
     <string name="preference_remap_controller_title">Thay đổi liên kết nút tay cầm</string>
     <string name="preference_remap_controller_description">Cho phép bạn sửa đổi các phím bàn phím được gán cho mỗi nút điều khiển</string>
-    <string name="mcl_button_social_media">Discord</string>
     <string name="ltw_render_distance_warning_msg">GPU của bạn không thể kết xuất với khoảng cách trên 7 chunks nếu không có Sodium hoặc các mod tương tự khác. Khoảng cách kết xuất sẽ được tự điều chỉnh lại khi nhấn OK.</string>
     <string name="mcl_button_open_directory">Mở thư mục trò chơi</string>
     <string name="local_login_bad_username_title">Tên người dùng không phù hợp</string>

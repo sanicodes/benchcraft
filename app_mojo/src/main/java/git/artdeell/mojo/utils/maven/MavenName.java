@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import git.artdeell.mojo.Tools;
+
 public class MavenName {
     public final String provider;
     public final String module;
@@ -85,7 +87,7 @@ public class MavenName {
             builder.append('-').append(suffix);
         }
         String path =  builder.append(fileExtension).toString();
-        Log.i("MojoLauncher", "Path:"+path);
+        Log.i(Tools.APP_NAME, "Path:"+path);
         return path;
     }
 

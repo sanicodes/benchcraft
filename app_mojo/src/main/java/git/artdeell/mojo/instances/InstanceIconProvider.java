@@ -28,8 +28,8 @@ public class InstanceIconProvider {
     private static final Map<String, Integer> sStaticIconLabels = new HashMap<>();
 
     static {
-        addStaticIcon("default", R.drawable.ic_mojo_full, R.string.instance_icon_default);
-        addStaticIcon("crafting_table", R.drawable.ic_instance_crafting_table, R.string.instance_icon_crafting_table);
+        // Instances that still use the removed "crafting_table" icon fall back to this same image
+        addStaticIcon("default", R.drawable.ic_instance_crafting_table, R.string.instance_icon_default);
         addStaticIcon("fabric", R.drawable.ic_fabric, R.string.instance_icon_fabric);
         addStaticIcon("quilt", R.drawable.ic_quilt, R.string.instance_icon_quilt);
         addStaticIcon("forge", R.drawable.ic_forge, R.string.instance_icon_forge);
