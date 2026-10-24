@@ -22,7 +22,6 @@
         android:paddingHorizontal="@dimen/padding_medium"
         android:paddingVertical="@dimen/padding_medium"
         android:layout_marginTop="@dimen/fragment_padding_medium"
-        android:layout_marginHorizontal="@dimen/fragment_padding_medium"
 
         app:layout_constraintTop_toTopOf="parent"
 
@@ -31,9 +30,11 @@
         <!-- Search text -->
         <EditText
             android:id="@+id/search_mod_edittext"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/padding_medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_line"
+            android:background="@drawable/background_input"
             android:textSize="@dimen/_13ssp"
             android:translationZ="2dp"
 

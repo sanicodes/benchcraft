@@ -942,6 +942,32 @@ public final class Tools {
         });
     }
 
+    /**
+     * Like {@link #setupOverlayView}, but keeps the list padding in sync when the overlay changes height.
+     * Every height change scrolls the list back to the top, so keep views that toggle often
+     * (like progress bars) INVISIBLE instead of GONE.
+     */
+    public static void setupResizableOverlayView(RecyclerView recyclerView, View overlayView) {
+        float overlayTop = recyclerView.getResources().getDimension(R.dimen.fragment_padding_medium);
+        int basePadding = recyclerView.getPaddingTop();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                overlayView.setY(MathUtils.clamp(overlayView.getY() - dy, -overlayView.getHeight(), overlayTop));
+            }
+        });
+        overlayView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if(bottom - top == oldBottom - oldTop) return;
+            int padding = basePadding + (int) (bottom - top + overlayTop);
+            recyclerView.post(() -> {
+                recyclerView.setPadding(recyclerView.getPaddingLeft(), padding,
+                        recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+                overlayView.setY(overlayTop);
+                recyclerView.scrollToPosition(0);
+            });
+        });
+    }
+
     public static <T> Iterable<T> arrayIterable(T[] array) {
         return ()->new Iterator<T>() {
             private int mPos = 0;

@@ -3,18 +3,37 @@
     <color name="control_button_color">#4CC4C4C4</color>
     <color name="control_button_pressed_color">#4D000000</color>
 
-    <color name="minebutton_color">#91dffb</color>
-    <color name="minebutton_secondary">#2a2a2a</color>
-    <color name="background_app">#181818</color>
-    <color name="divider">@color/background_overlay</color>
-    <color name="background_overlay">#464646</color>
-    <color name="background_status_bar">#242424</color>
-    <color name="background_bottom_bar">#232323</color>
-    <color name="icon_outline_color">#FFFFFF</color>
+    <!-- Launcher palette, modeled after Modrinth's dark theme -->
+    <color name="surface_base">#16181C</color>
+    <color name="surface_raised">#26292F</color>
+    <color name="surface_button">#33363D</color>
+    <color name="surface_super_raised">#40434A</color>
+    <color name="surface_scrim">#99000000</color>
+    <color name="brand">#1BD96A</color>
+    <color name="brand_pressed">#17BC5C</color>
+    <color name="brand_highlight">#331BD96A</color>
+    <color name="brand_dim">#1A8C4A</color>
+    <color name="on_brand">#0B0D0F</color>
+    <color name="danger">#FF496E</color>
+    <color name="danger_highlight">#33FF496E</color>
+    <color name="text_contrast">#ECF9FB</color>
+    <color name="text_base">#B0BAC5</color>
+    <color name="text_muted">#96A2B0</color>
+    <color name="text_hint">#7C8590</color>
+    <color name="ripple">#1FFFFFFF</color>
 
-    <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#B2B2B2</color>
+    <color name="minebutton_color">@color/brand</color>
+    <color name="minebutton_secondary">@color/surface_button</color>
+    <color name="background_app">@color/surface_base</color>
+    <color name="divider">@color/surface_button</color>
+    <color name="background_overlay">@color/surface_raised</color>
+    <color name="background_status_bar">@color/surface_base</color>
+    <color name="background_bottom_bar">@color/surface_raised</color>
+    <color name="icon_outline_color">@color/text_base</color>
 
-    <color name="mod_manager_delete_text">#FF7A7A</color>
+    <color name="primary_text">@color/text_contrast</color>
+    <color name="secondary_text">@color/text_muted</color>
+
+    <color name="mod_manager_delete_text">@color/danger</color>
 
 </resources>

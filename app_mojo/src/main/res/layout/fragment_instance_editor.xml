@@ -6,279 +6,425 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_app"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fadeScrollbars="true"
-        android:scrollbarThumbVertical="@color/minebutton_color">
+        android:fadeScrollbars="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/fragment_padding_medium">
+            android:orientation="vertical"
+            android:padding="@dimen/fragment_padding_medium">
 
-            <ImageView
-                android:id="@+id/vprof_editor_instance_icon"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_marginTop="@dimen/padding_heavy"
-                android:paddingHorizontal="@dimen/profile_editor_image_padding"
-
-                android:paddingVertical="@dimen/profile_editor_image_padding"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:layout_width="@dimen/_14sdp"
-                android:layout_height="@dimen/_14sdp"
-                android:src="@drawable/ic_px_edit"
-                android:background="@drawable/background_icon_edit"
-                app:layout_constraintBottom_toBottomOf="@+id/vprof_editor_instance_icon"
-                app:layout_constraintEnd_toEndOf="@+id/vprof_editor_instance_icon"/>
-
+            <!-- General -->
             <TextView
-                android:id="@+id/vprof_editor_profile_name_sub"
+                style="@style/MojoLauncher.Text.Section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profiles_profile_name"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_instance_name"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_instance_name" />
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_marginBottom="@dimen/padding_moderate"
+                android:text="@string/instance_editor_section_general"
+                android:textAllCaps="true" />
 
-            <EditText
-                android:id="@+id/vprof_editor_instance_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_card"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_heavy">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- Slightly larger than the icon so the edit badge can overhang its corner -->
+                    <FrameLayout
+                        android:layout_width="@dimen/_68sdp"
+                        android:layout_height="@dimen/_68sdp">
+
+                        <ImageView
+                            android:id="@+id/vprof_editor_instance_icon"
+                            android:layout_width="@dimen/_64sdp"
+                            android:layout_height="@dimen/_64sdp"
+                            android:background="@drawable/background_instance_icon"
+                            android:contentDescription="@string/instance_icon_upload"
+                            android:padding="@dimen/_6sdp"
+                            android:scaleType="fitCenter"
+                            tools:src="@drawable/ic_instance_crafting_table" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/background_icon_edit"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/_4sdp"
+                            android:src="@drawable/ic_px_edit"
+                            app:tint="@color/on_brand" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_large"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MojoLauncher.Text.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/instance_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/instance_icon_custom_hint"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/_9ssp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_moderate"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/vprof_editor_icon_upload"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/padding_medium"
+                                android:drawableStart="@drawable/ic_upload"
+                                android:drawablePadding="@dimen/padding_medium"
+                                android:minHeight="36dp"
+                                android:paddingHorizontal="@dimen/padding_heavy"
+                                android:text="@string/instance_icon_upload"
+                                android:textSize="@dimen/_10ssp" />
+
+                            <ImageButton
+                                android:id="@+id/vprof_editor_icon_remove"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/button_danger"
+                                android:contentDescription="@string/instance_icon_remove"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_px_trash"
+                                android:tooltipText="@string/instance_icon_remove"
+                                android:visibility="gone"
+                                app:tint="@color/danger"
+                                tools:targetApi="o"
+                                tools:visibility="visible" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_large"
+                    android:text="@string/instance_icon_presets" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_moderate"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/vprof_editor_icon_presets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <Button
+                    android:id="@+id/vprof_editor_icon_modrinth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_moderate"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="@dimen/padding_medium"
+                    android:minHeight="36dp"
+                    android:paddingHorizontal="@dimen/padding_heavy"
+                    android:text="@string/instance_icon_modrinth"
+                    android:textSize="@dimen/_10ssp" />
+
+                <TextView
+                    android:id="@+id/vprof_editor_profile_name_sub"
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_large"
+                    android:labelFor="@id/vprof_editor_instance_name"
+                    android:text="@string/profiles_profile_name" />
+
+                <EditText
+                    android:id="@+id/vprof_editor_instance_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:hint="@string/unnamed"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName"
+                    android:textSize="@dimen/_12ssp" />
+
+                <TextView
+                    android:id="@+id/vprof_editor_version_sub"
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_heavy"
+                    android:text="@string/profiles_profile_version" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/vprof_editor_version_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_input"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:hint="@string/version_select_hint"
+                        android:minHeight="@dimen/input_min_height"
+                        android:paddingHorizontal="@dimen/padding_heavy"
+                        android:singleLine="true"
+                        android:textColor="@color/text_contrast"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <Button
+                        android:id="@+id/vprof_editor_version_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/padding_medium"
+                        android:text="@string/global_select" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/vprof_editor_manage_mods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_large"
+                    android:drawableStart="@drawable/ic_px_mods"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="@dimen/padding_heavy"
+                    android:gravity="start|center_vertical"
+                    android:minHeight="@dimen/input_min_height"
+                    android:paddingHorizontal="@dimen/padding_heavy"
+                    android:text="@string/vprof_editor_manage_mods" />
+            </LinearLayout>
+
+            <!-- Launch -->
+            <TextView
+                style="@style/MojoLauncher.Text.Section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_small"
                 android:layout_marginTop="@dimen/padding_large"
-                android:background="@drawable/background_line"
-                android:textSize="@dimen/_13ssp"
+                android:layout_marginBottom="@dimen/padding_moderate"
+                android:text="@string/instance_editor_section_launch"
+                android:textAllCaps="true" />
 
-                android:ems="10"
-                android:hint="@string/unnamed"
-                android:inputType="textPersonName"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                app:layout_constraintTop_toBottomOf="@id/vprof_editor_instance_icon" />
-
-
-            <TextView
-                android:id="@+id/vprof_editor_version_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/profiles_profile_version"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_version_spinner"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_version_spinner" />
-
-            <TextView
-                android:id="@+id/vprof_editor_version_spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="@dimen/padding_medium"
-                android:background="@drawable/background_line"
-                android:hint="@string/version_select_hint"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                android:textSize="@dimen/_13ssp"
-
-                app:layout_constraintEnd_toStartOf="@+id/vprof_editor_version_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_instance_name" />
-
-            <Button
-                android:id="@+id/vprof_editor_version_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:paddingHorizontal="@dimen/padding_large"
-                android:paddingVertical="0px"
-
-
-                android:text="@string/global_select"
-
-                app:layout_constraintBottom_toBottomOf="@+id/vprof_editor_version_spinner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/vprof_editor_version_spinner" />
-
-            <com.kdt.mcgui.MineButton
-                android:id="@+id/vprof_editor_manage_mods"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/vprof_editor_manage_mods"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_version_spinner"
-                />
-
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/default_control"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_ctrl_spinner"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_ctrl_spinner" />
-
-            <TextView
-                android:id="@+id/vprof_editor_ctrl_spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="@dimen/padding_medium"
-
-                android:background="@drawable/background_line"
-                android:hint="@string/use_global_default"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                android:textSize="@dimen/_13ssp"
-
-                app:layout_constraintEnd_toStartOf="@id/vprof_editor_ctrl_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_manage_mods" />
-
-            <Button
-                android:id="@+id/vprof_editor_ctrl_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:paddingHorizontal="@dimen/padding_large"
-                android:text="@string/global_select"
-
-
-                app:layout_constraintBottom_toBottomOf="@id/vprof_editor_ctrl_spinner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/vprof_editor_ctrl_spinner" />
-
-            <TextView
-                android:id="@+id/vprof_editor_data_checkbox_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instance_shared_data"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_data_checkbox_container"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_data_checkbox_container" />
-
-            <CheckBox
-                android:id="@+id/vprof_editor_data_checkbox_container"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/background_line"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                android:button="@null"
-                android:text="@string/instance_shared_data_off"
-                android:textColor="@color/checkbox_text_color"
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_ctrl_spinner"
-                tools:layout_editor_absoluteX="22dp"/>
+                android:background="@drawable/background_card"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_heavy">
 
+                <TextView
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_control" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/vprof_editor_ctrl_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_input"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:hint="@string/use_global_default"
+                        android:minHeight="@dimen/input_min_height"
+                        android:paddingHorizontal="@dimen/padding_heavy"
+                        android:singleLine="true"
+                        android:textColor="@color/text_contrast"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <Button
+                        android:id="@+id/vprof_editor_ctrl_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/padding_medium"
+                        android:text="@string/global_select" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_heavy"
+                    android:text="@string/pedit_renderer" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium">
+
+                    <Spinner
+                        android:id="@+id/vprof_editor_instance_renderer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_input"
+                        android:dropDownWidth="match_parent"
+                        android:minHeight="@dimen/input_min_height"
+                        android:paddingVertical="0dp"
+                        android:paddingEnd="@dimen/_28sdp"
+                        tools:ignore="RtlSymmetry" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="@dimen/padding_heavy"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/spinner_arrow_down" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/vprof_editor_data_checkbox_sub"
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_heavy"
+                    android:text="@string/instance_shared_data" />
+
+                <CheckBox
+                    android:id="@+id/vprof_editor_data_checkbox_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:background="@drawable/background_input"
+                    android:button="@null"
+                    android:minHeight="@dimen/input_min_height"
+                    android:paddingHorizontal="@dimen/padding_heavy"
+                    android:text="@string/instance_shared_data_off"
+                    android:textColor="@color/checkbox_text_color"
+                    android:textSize="@dimen/_11ssp" />
+            </LinearLayout>
+
+            <!-- Java -->
             <TextView
-                android:id="@+id/textView6"
+                style="@style/MojoLauncher.Text.Section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pvc_jvmArgs"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_jre_args"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_jre_args" />
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/padding_moderate"
+                android:text="@string/instance_editor_section_java"
+                android:textAllCaps="true" />
 
-            <EditText
-                android:id="@+id/vprof_editor_jre_args"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/background_line"
-                android:ems="10"
-                android:hint="@string/use_global_default"
-                android:inputType="text"
-                android:paddingHorizontal="@dimen/padding_heavy"
-                android:textSize="@dimen/_13ssp"
+                android:background="@drawable/background_card"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_heavy">
 
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_data_checkbox_container" />
+                <TextView
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pedit_java_runtime" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pedit_java_runtime"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_spinner_runtime"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_spinner_runtime" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium">
 
-            <Spinner
-                android:id="@+id/vprof_editor_spinner_runtime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_line"
-                android:paddingVertical="0px"
-                android:layout_marginTop="32dp"
-                app:layout_constraintTop_toBottomOf="@id/vprof_editor_jre_args"
-                tools:paddingVertical="@dimen/_12sdp" />
+                    <Spinner
+                        android:id="@+id/vprof_editor_spinner_runtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_input"
+                        android:minHeight="@dimen/input_min_height"
+                        android:paddingVertical="0dp"
+                        android:paddingEnd="@dimen/_28sdp"
+                        tools:ignore="RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_8sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:rotation="180"
-                android:src="@drawable/spinner_arrow"
+                    <ImageView
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="@dimen/padding_heavy"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/spinner_arrow_down" />
+                </FrameLayout>
 
-                app:layout_constraintBottom_toBottomOf="@id/vprof_editor_spinner_runtime"
-                app:layout_constraintEnd_toEndOf="@id/vprof_editor_spinner_runtime"
-                app:layout_constraintTop_toTopOf="@id/vprof_editor_spinner_runtime" />
+                <TextView
+                    style="@style/MojoLauncher.Text.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_heavy"
+                    android:labelFor="@id/vprof_editor_jre_args"
+                    android:text="@string/pvc_jvmArgs" />
 
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pedit_renderer"
-                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_instance_renderer"
-                app:layout_constraintStart_toStartOf="@+id/vprof_editor_instance_renderer" />
-
-            <Spinner
-                android:id="@+id/vprof_editor_instance_renderer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/background_line"
-                android:dropDownWidth="match_parent"
-                android:paddingVertical="0px"
-
-
-                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_spinner_runtime"
-                tools:paddingVertical="@dimen/_12sdp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_8sdp"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:rotation="180"
-                android:src="@drawable/spinner_arrow"
-
-                app:layout_constraintBottom_toBottomOf="@id/vprof_editor_instance_renderer"
-                app:layout_constraintEnd_toEndOf="@id/vprof_editor_instance_renderer"
-                app:layout_constraintTop_toTopOf="@id/vprof_editor_instance_renderer" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                    android:id="@+id/vprof_editor_jre_args"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:hint="@string/use_global_default"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:textSize="@dimen/_12ssp" />
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/fragment_padding_medium"
-        android:layout_marginVertical="13dp"
-        >
+        android:paddingTop="@dimen/padding_moderate"
+        android:paddingBottom="@dimen/fragment_padding_medium">
+
+        <Button
+            android:id="@+id/vprof_editor_delete_button"
+            style="@style/MojoLauncher.Button.Danger"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_marginEnd="@dimen/padding_moderate"
+            android:layout_weight="1"
+            android:text="@string/global_delete" />
+
         <com.kdt.mcgui.MineButton
             android:id="@+id/vprof_editor_save_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/global_save"
-            android:layout_marginEnd="@dimen/padding_medium" />
-
-        <com.kdt.mcgui.MineButton
-            android:id="@+id/vprof_editor_delete_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/padding_medium"
-            android:text="@string/global_delete" />
+            android:layout_height="@dimen/_44sdp"
+            android:layout_weight="2"
+            android:text="@string/global_save" />
     </LinearLayout>
 </LinearLayout>

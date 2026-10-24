@@ -4,6 +4,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Build;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -125,16 +126,17 @@ public class mcVersionSpinner extends ExtendedTextView {
         // Setup various attributes
         setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen._12ssp));
         setGravity(Gravity.CENTER_VERTICAL);
-        int startPadding = getContext().getResources().getDimensionPixelOffset(R.dimen._17sdp);
-        int endPadding = getContext().getResources().getDimensionPixelOffset(R.dimen._5sdp);
+        int startPadding = getContext().getResources().getDimensionPixelOffset(R.dimen._6sdp);
+        int endPadding = getContext().getResources().getDimensionPixelOffset(R.dimen._8sdp);
+        int drawablePadding = getContext().getResources().getDimensionPixelOffset(R.dimen._12sdp);
         setPaddingRelative(startPadding, 0, endPadding, 0);
-        setCompoundDrawablePadding(startPadding);
+        setCompoundDrawablePadding(drawablePadding);
         addOnAttachStateChangeListener(new ExtraAttachListener());
         setSelection(0);
 
         // Popup window behavior
         setOnClickListener(new OnClickListener() {
-            final int offset = -getContext().getResources().getDimensionPixelOffset(R.dimen._4sdp);
+            final int offset = getContext().getResources().getDimensionPixelOffset(R.dimen._4sdp);
             @Override
             public void onClick(View v) {
                 if(mPopupWindow == null) getPopupWindow();
@@ -143,11 +145,24 @@ public class mcVersionSpinner extends ExtendedTextView {
                     mPopupWindow.dismiss();
                     return;
                 }
+                mPopupWindow.setWidth(getWidth());
+                mPopupWindow.setHeight(computePopupHeight());
                 mPopupWindow.showAsDropDown(mcVersionSpinner.this, 0, offset);
                 // Post() is required for the layout inflation phase
                 post(() -> mListView.setSelection(mSelectedIndex));
             }
         });
+    }
+
+    /** @return The height needed to show every list item, capped so that long lists scroll */
+    private int computePopupHeight() {
+        int maxHeight = getResources().getDimensionPixelOffset(R.dimen._184sdp);
+        Rect backgroundPadding = new Rect();
+        mPopupWindow.getBackground().getPadding(backgroundPadding);
+        int verticalPadding = backgroundPadding.top + backgroundPadding.bottom;
+        mListView.measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(maxHeight - verticalPadding, MeasureSpec.AT_MOST));
+        return Math.min(mListView.getMeasuredHeight() + verticalPadding, maxHeight);
     }
 
     private void performExtraAction(InstanceAdapterExtra extra) {
@@ -176,7 +191,8 @@ public class mcVersionSpinner extends ExtendedTextView {
         });
 
         mPopupWindow = new PopupWindow(mListView, MATCH_PARENT, getContext().getResources().getDimensionPixelOffset(R.dimen._184sdp));
-        mPopupWindow.setElevation(5);
+        mPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.background_popup, null));
+        mPopupWindow.setElevation(getResources().getDimension(R.dimen.padding_moderate));
         mPopupWindow.setClippingEnabled(false);
 
         // Block clicking outside of the popup window

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kdt.mcgui.ProgressLayout;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -55,6 +56,7 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
     };
 
     private final ModrinthModApi mApi = new ModrinthModApi();
+    private final EnumMap<ContentType, TextView> mTabs = new EnumMap<>(ContentType.class);
     private ModBrowserAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private EditText mSearchEditText;
@@ -99,11 +101,17 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
         mFilterTextView = view.findViewById(R.id.mod_browser_filter_textview);
         mStatusTextView = view.findViewById(R.id.search_mod_status_text);
         Spinner sortSpinner = view.findViewById(R.id.mod_browser_sort_spinner);
+        mTabs.put(ContentType.MODS, view.findViewById(R.id.mod_browser_tab_mods));
+        mTabs.put(ContentType.RESOURCE_PACKS, view.findViewById(R.id.mod_browser_tab_resource_packs));
+        mTabs.put(ContentType.SHADERS, view.findViewById(R.id.mod_browser_tab_shaders));
+        for(ContentType type : ContentType.values()) {
+            mTabs.get(type).setOnClickListener(v -> selectType(type));
+        }
 
         mAdapter = new ModBrowserAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        Tools.setupOverlayView(mRecyclerView, view.findViewById(R.id.search_mod_overlay));
+        Tools.setupResizableOverlayView(mRecyclerView, view.findViewById(R.id.search_mod_overlay));
 
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.mod_browser_sort_names, android.R.layout.simple_spinner_item);
@@ -147,13 +155,42 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
 
     private void onTargetReady(ModTarget modTarget) {
         mModTarget = modTarget;
+        updateTabs();
         mFilterTextView.setText(getFilterText(modTarget));
         startSearch();
+        loadInstalledModIndex();
+    }
+
+    private void selectType(ContentType type) {
+        if(type == mContentType || mModTarget == null) return;
+        mContentType = type;
+        updateTabs();
+        mFilterTextView.setText(getFilterText(mModTarget));
+        // Badges from the previous type would be wrong until the new index is ready
+        mAdapter.setInstalledModIndex(InstalledModIndex.empty());
+        startSearch();
+        loadInstalledModIndex();
+    }
+
+    private void updateTabs() {
+        int supportedCount = 0;
+        for(ContentType type : ContentType.values()) {
+            TextView tab = mTabs.get(type);
+            boolean supported = mModTarget.supports(type);
+            if(supported) supportedCount++;
+            tab.setVisibility(supported ? View.VISIBLE : View.GONE);
+            tab.setSelected(type == mContentType);
+        }
+        ((View) mTabs.get(ContentType.MODS).getParent()).setVisibility(supportedCount > 1 ? View.VISIBLE : View.GONE);
+    }
+
+    private void loadInstalledModIndex() {
+        ModTarget modTarget = mModTarget;
         ContentType type = mContentType;
         mInstalledModIndex = MojoApplication.sExecutorService.submit(() -> {
             InstalledModIndex index = InstalledModIndex.build(mApi, modTarget.getDirectory(type), type);
             Tools.runOnUiThread(() -> {
-                if(mAdapter != null) mAdapter.setInstalledModIndex(index);
+                if(mAdapter != null && type == mContentType) mAdapter.setInstalledModIndex(index);
             });
             return index;
         });
@@ -329,7 +366,7 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
 
     private void setLoading(boolean loading) {
         mRunningRequests += loading ? 1 : -1;
-        mProgressBar.setVisibility(mRunningRequests > 0 ? View.VISIBLE : View.GONE);
+        mProgressBar.setVisibility(mRunningRequests > 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showStatus(int message) {

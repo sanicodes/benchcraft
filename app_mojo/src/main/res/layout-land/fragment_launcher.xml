@@ -38,8 +38,7 @@
             android:id="@+id/play_button"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_44sdp"
-            android:text="@string/main_play"
-            android:textAllCaps="true" />
+            android:text="@string/main_play" />
     </LinearLayout>
 
     <ScrollView
@@ -58,6 +57,15 @@
             android:paddingBottom="@dimen/fragment_padding_medium"
             android:paddingEnd="@dimen/fragment_padding_medium">
 
+            <TextView
+                style="@style/MojoLauncher.Text.Section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_marginBottom="@dimen/padding_moderate"
+                android:text="@string/dashboard_section_manage"
+                android:textAllCaps="true" />
+
             <include
                 android:id="@+id/dashboard_mods_tile"
                 layout="@layout/view_dashboard_tile"
@@ -73,7 +81,7 @@
 
                 <include
                     android:id="@+id/dashboard_controls_tile"
-                    layout="@layout/view_dashboard_tile"
+                    layout="@layout/view_dashboard_tile_compact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -81,7 +89,7 @@
 
                 <include
                     android:id="@+id/dashboard_folder_tile"
-                    layout="@layout/view_dashboard_tile"
+                    layout="@layout/view_dashboard_tile_compact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -96,7 +104,7 @@
 
                 <include
                     android:id="@+id/dashboard_jar_tile"
-                    layout="@layout/view_dashboard_tile"
+                    layout="@layout/view_dashboard_tile_compact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -104,7 +112,7 @@
 
                 <include
                     android:id="@+id/dashboard_logs_tile"
-                    layout="@layout/view_dashboard_tile"
+                    layout="@layout/view_dashboard_tile_compact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />

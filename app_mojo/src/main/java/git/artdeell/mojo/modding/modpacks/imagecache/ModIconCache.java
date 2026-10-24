@@ -19,6 +19,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class ModIconCache {
+    /**
+     * Was ".ca" back when resized icons were always saved as JPEG, which turned transparent
+     * backgrounds black. The new suffix makes those old copies get downloaded again.
+     */
+    static final String CACHE_FILE_SUFFIX = ".ca2";
     ThreadPoolExecutor cacheLoaderPool = new ThreadPoolExecutor(10,
             10,
             1000,
@@ -87,7 +92,7 @@ public class ModIconCache {
      */
 
     public static void writeInstanceImage(Instance instance, String imageTag) {
-        File imagePath = new File(Tools.DIR_CACHE, "mod_icons/"+imageTag+".ca");
+        File imagePath = new File(getImageCachePath(), imageTag + CACHE_FILE_SUFFIX);
         Log.i("IconCache", "Creating base64 version of icon "+imageTag);
         if(!imagePath.canRead() || !imagePath.isFile()) {
             Log.i("IconCache", "Icon does not exist");

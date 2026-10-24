@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="@dimen/padding_medium">
+
+    <EditText
+        android:id="@+id/icon_picker_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_input"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="@dimen/padding_medium"
+        android:hint="@string/mod_browser_search_hint"
+        android:imeOptions="actionSearch|flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/padding_heavy"
+        android:textSize="@dimen/_12ssp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_260sdp"
+        android:layout_marginTop="@dimen/padding_moderate">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/icon_picker_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_medium"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+            android:scrollbars="vertical" />
+
+        <ProgressBar
+            android:id="@+id/icon_picker_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/icon_picker_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/padding_large"
+            android:textColor="@color/secondary_text"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

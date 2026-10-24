@@ -2,8 +2,10 @@ package com.kdt.mcgui;
 
 import android.content.*;
 import android.util.*;
-import android.graphics.*;
-import android.widget.EditText;
+
+import androidx.core.content.res.ResourcesCompat;
+
+import git.artdeell.mojo.R;
 
 public class MineEditText extends androidx.appcompat.widget.AppCompatEditText {
 	public MineEditText(Context ctx) {
@@ -17,7 +19,8 @@ public class MineEditText extends androidx.appcompat.widget.AppCompatEditText {
 	}
 
 	public void init() {
-		setBackgroundColor(Color.parseColor("#131313"));
-		setPadding(5, 5, 5, 5);
+		setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.background_input, null));
+		int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.padding_heavy);
+		setPaddingRelative(horizontalPadding, 0, horizontalPadding, 0);
 	}
 }

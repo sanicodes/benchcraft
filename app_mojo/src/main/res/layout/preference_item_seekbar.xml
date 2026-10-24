@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Slider row: icon badge, title and summary, with the slider and its value underneath -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:paddingStart="@dimen/padding_large"
+    android:paddingEnd="@dimen/padding_large">
+
+    <FrameLayout
+        android:id="@+id/icon_frame"
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="@dimen/icon_badge_size"
+        android:layout_marginEnd="@dimen/padding_large"
+        android:background="@drawable/background_icon_badge_neutral">
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:labelFor="@+id/seekbar"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="4"
+            android:textAlignment="viewStart"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/_10ssp" />
+
+        <!-- Keeps the pressed state of the row from animating the slider thumb -->
+        <androidx.preference.UnPressableLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:gravity="center_vertical">
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:paddingStart="9dp"
+                android:paddingTop="15dp"
+                android:paddingEnd="9dp"
+                android:paddingBottom="15dp" />
+
+            <TextView
+                android:id="@+id/seekbar_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:background="@drawable/background_badge"
+                android:ellipsize="marquee"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:scrollbars="none"
+                android:singleLine="true"
+                android:textColor="@color/brand"
+                android:textSize="@dimen/_10ssp" />
+        </androidx.preference.UnPressableLinearLayout>
+    </LinearLayout>
+</LinearLayout>

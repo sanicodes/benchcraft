@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Smaller dashboard tile for the two-column grid. Same view ids as view_dashboard_tile -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_tile"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_heavy">
+
+    <ImageView
+        android:id="@+id/dashboard_tile_icon"
+        android:layout_width="@dimen/_28sdp"
+        android:layout_height="@dimen/_28sdp"
+        android:background="@drawable/background_icon_badge"
+        android:importantForAccessibility="no"
+        android:padding="@dimen/_6sdp"
+        android:scaleType="fitCenter"
+        app:tint="@color/brand"
+        tools:src="@drawable/ic_px_folder" />
+
+    <TextView
+        android:id="@+id/dashboard_tile_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_moderate"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textColor="@color/text_contrast"
+        android:textSize="@dimen/_11ssp"
+        tools:text="Game folder" />
+
+    <TextView
+        android:id="@+id/dashboard_tile_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_9ssp"
+        android:visibility="gone"
+        tools:text="Saves, configs, resource packs"
+        tools:visibility="visible" />
+</LinearLayout>

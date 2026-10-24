@@ -28,6 +28,7 @@ public class ModrinthModApi {
     public static final String SORT_NEWEST = "newest";
     public static final String SORT_UPDATED = "updated";
     private static final int PROJECTS_PER_REQUEST = 100;
+    private static final String[] ICON_PROJECT_TYPES = {"mod", "modpack", "resourcepack", "shader"};
 
     private final ApiHandler mApiHandler;
 
@@ -54,6 +55,25 @@ public class ModrinthModApi {
         params.put("index", sortIndex);
         params.put("limit", PAGE_SIZE);
         params.put("offset", offset);
+        return mApiHandler.get("search", params, SearchPage.class);
+    }
+
+    /**
+     * Search every kind of project that makes sense as an instance icon, regardless of game version.
+     * Without a query, the most downloaded projects come first.
+     */
+    @Nullable
+    public SearchPage searchIcons(String query, int limit) {
+        JsonArray typeFacet = new JsonArray();
+        for(String type : ICON_PROJECT_TYPES) typeFacet.add("project_type:" + type);
+        JsonArray facets = new JsonArray();
+        facets.add(typeFacet);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("query", query == null ? "" : query);
+        params.put("facets", facets.toString());
+        params.put("index", query == null || query.isEmpty() ? SORT_DOWNLOADS : SORT_RELEVANCE);
+        params.put("limit", limit);
         return mApiHandler.get("search", params, SearchPage.class);
     }
 

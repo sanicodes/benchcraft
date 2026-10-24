@@ -1,13 +1,10 @@
 package git.artdeell.mojo.instances;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import androidx.core.graphics.ColorUtils;
 
 import git.artdeell.mojo.R;
 
@@ -94,18 +91,14 @@ public class InstanceAdapter extends BaseAdapter {
         else extendedTextView.setText(String.format("%s - %s", profileName, versionName));
 
         if(!displaySelection) return;
-        if(idx == mSelectionIndex) {
-            extendedTextView.setBackgroundColor(ColorUtils.setAlphaComponent(Color.WHITE, 60));
-        }else {
-            extendedTextView.setBackgroundColor(Color.TRANSPARENT);
-        }
+        extendedTextView.setActivated(idx == mSelectionIndex);
     }
 
     public void setViewExtra(View v, InstanceAdapterExtra extra) {
         ExtendedTextView extendedTextView = (ExtendedTextView) v;
         extendedTextView.setCompoundDrawablesRelative(extra.icon, null, extendedTextView.getCompoundsDrawables()[2], null);
         extendedTextView.setText(extra.name);
-        extendedTextView.setBackgroundColor(Color.TRANSPARENT);
+        extendedTextView.setActivated(false);
     }
 
     public void setView(View v, int index, boolean displaySelection) {

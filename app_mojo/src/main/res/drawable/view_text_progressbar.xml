@@ -1,14 +1,17 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
-        <color android:color="@color/background_app"/>
+        <shape>
+            <corners android:radius="@dimen/radius_small" />
+            <solid android:color="@color/surface_base" />
+        </shape>
     </item>
-
-
     <item android:id="@android:id/progress">
         <clip>
-             <color android:color='@color/minebutton_color'/>
+            <shape>
+                <corners android:radius="@dimen/radius_small" />
+                <solid android:color="@color/brand_dim" />
+            </shape>
         </clip>
     </item>
-
 </layer-list>

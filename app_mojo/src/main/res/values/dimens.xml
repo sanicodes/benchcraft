@@ -31,4 +31,15 @@
     <dimen name="fragment_padding_medium">@dimen/_10sdp</dimen>
     <!-- Misc paddings -->
     <dimen name="profile_editor_image_padding">@dimen/padding_small</dimen>
+
+    <!-- Corner radii -->
+    <dimen name="radius_small">8dp</dimen>
+    <dimen name="radius_medium">12dp</dimen>
+    <dimen name="radius_large">16dp</dimen>
+    <dimen name="radius_pill">100dp</dimen>
+
+    <!-- Controls -->
+    <dimen name="button_min_height">44dp</dimen>
+    <dimen name="input_min_height">48dp</dimen>
+    <dimen name="icon_badge_size">36dp</dimen>
 </resources>

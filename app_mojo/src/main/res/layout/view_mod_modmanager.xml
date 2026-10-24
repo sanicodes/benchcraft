@@ -15,6 +15,9 @@
 
         <ImageView
             android:id="@+id/mod_thumbnail_imageview"
+            android:background="@drawable/background_thumbnail"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
             android:layout_width="@dimen/_44sdp"
             android:layout_height="@dimen/_44sdp"
             android:scaleType="fitCenter"

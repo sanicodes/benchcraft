@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,10 +14,13 @@
 
     <ImageView
         android:id="@+id/dashboard_tile_icon"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:scaleType="fitCenter"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
+        android:background="@drawable/background_icon_badge"
         android:importantForAccessibility="no"
+        android:padding="@dimen/_7sdp"
+        android:scaleType="fitCenter"
+        app:tint="@color/brand"
         tools:src="@drawable/ic_px_mods" />
 
     <LinearLayout
@@ -28,18 +32,20 @@
 
         <TextView
             android:id="@+id/dashboard_tile_title"
-            style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textAllCaps="true"
+            android:textColor="@color/text_contrast"
+            android:textSize="@dimen/_12ssp"
             tools:text="Mods" />
 
         <TextView
             android:id="@+id/dashboard_tile_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/secondary_text"
@@ -48,4 +54,12 @@
             tools:text="12 mods, 2 disabled"
             tools:visibility="visible" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:importantForAccessibility="no"
+        android:rotation="-90"
+        android:src="@drawable/spinner_arrow_down" />
 </LinearLayout>

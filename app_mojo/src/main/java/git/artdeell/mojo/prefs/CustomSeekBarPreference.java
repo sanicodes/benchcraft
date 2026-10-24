@@ -3,13 +3,12 @@ package git.artdeell.mojo.prefs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SeekBarPreference;
 
@@ -60,11 +59,11 @@ public class CustomSeekBarPreference extends SeekBarPreference {
     @Override
     public void onBindViewHolder(@NonNull PreferenceViewHolder view) {
         super.onBindViewHolder(view);
+        // SeekBarPreference gives its title the summary color, use the regular title color instead
         TextView titleTextView = (TextView) view.findViewById(android.R.id.title);
-        titleTextView.setTextColor(Color.WHITE);
+        titleTextView.setTextColor(ResourcesCompat.getColorStateList(getContext().getResources(), R.color.text_primary, null));
 
         mTextView = (TextView) view.findViewById(R.id.seekbar_value);
-        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekbar);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Category header, aligned with the titles of the rows below it -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/padding_large"
+    android:paddingTop="@dimen/padding_large"
+    android:paddingEnd="@dimen/padding_large"
+    android:paddingBottom="4dp">
+
+    <FrameLayout
+        android:id="@+id/icon_frame"
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/padding_large">
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@android:id/title"
+            style="@style/PreferenceCategoryTitleTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/_10ssp" />
+    </LinearLayout>
+</LinearLayout>

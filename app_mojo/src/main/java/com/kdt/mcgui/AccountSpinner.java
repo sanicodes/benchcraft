@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,6 +52,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
     private final ValueAnimator mLoginStepAnimator = ValueAnimator.ofFloat(mMaxSteps);
     private final Paint mLoginBarPaint = new Paint();
     private float mLoginStep;
+    private boolean mLoginFailed;
 
     class LoginExtraListener implements ExtraListener<String> {
         private final AuthType mAuthType;
@@ -63,6 +63,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
 
         @Override
         public boolean onValueSet(String key, @NonNull String value) {
+            mLoginFailed = false;
             mLoginBarPaint.setColor(getResources().getColor(R.color.minebutton_color));
             BackgroundLogin backgroundLogin = mAuthType.createAuth();
             backgroundLogin.createAccount(AccountSpinner.this, value);
@@ -127,7 +128,10 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
         setOnItemSelectedListener(this);
         reload();
 
-        setBackgroundColor(getResources().getColor(R.color.background_status_bar));
+        setBackgroundResource(R.drawable.button_borderless);
+        // The new background has no padding, so the old one's arrow padding would stay and keep the
+        // account row (and its auth icon) away from the end of the bar
+        setPadding(0, 0, 0, 0);
         mLoginBarPaint.setColor(getResources().getColor(R.color.minebutton_color));
         mLoginBarPaint.setStrokeWidth(getResources().getDimensionPixelOffset(R.dimen._2sdp));
         mLoginStepAnimator.addUpdateListener(this);
@@ -193,6 +197,8 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
+        // Only show the bar while a login is running, or when the last one failed
+        if(!mLoginFailed && mLoginStep >= mMaxSteps) return;
         float bottom = getHeight() - mLoginBarPaint.getStrokeWidth()/2;
         float lineFillPercent = (mLoginStep / mMaxSteps);
         canvas.drawLine(0, bottom, lineFillPercent * getWidth(), bottom, mLoginBarPaint);
@@ -201,6 +207,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
     @Override
     public void onLoginDone(Account account) {
         mLoginStep = mMaxSteps;
+        mLoginFailed = false;
         invalidate();
 
         Toast.makeText(getContext(), R.string.main_login_done, Toast.LENGTH_SHORT).show();
@@ -211,7 +218,8 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
 
     @Override
     public void onLoginError(Throwable errorMessage) {
-        mLoginBarPaint.setColor(Color.RED);
+        mLoginFailed = true;
+        mLoginBarPaint.setColor(getResources().getColor(R.color.danger));
         invalidate();
 
         Context context = getContext();
@@ -328,11 +336,18 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
             }
 
             int headCacheHash = System.identityHashCode(account);
-            BitmapDrawable accountHead = mSkinHeadCache.get(headCacheHash);
+            Drawable accountHead = mSkinHeadCache.get(headCacheHash);
             if (accountHead == null){
                 Bitmap accountSkinFace = account.getSkinFace();
-                accountHead = new BitmapDrawable(resources, accountSkinFace);
-                mSkinHeadCache.put(headCacheHash, accountHead);
+                if(accountSkinFace != null) {
+                    BitmapDrawable skinFaceDrawable = new BitmapDrawable(resources, accountSkinFace);
+                    mSkinHeadCache.put(headCacheHash, skinFaceDrawable);
+                    accountHead = skinFaceDrawable;
+                } else {
+                    // Local accounts and faces that are not downloaded yet get a generic avatar.
+                    // Not cached, so that the real face shows up once it is available
+                    accountHead = ResourcesCompat.getDrawable(resources, R.drawable.ic_user, theme);
+                }
             }
 
             textview.setText(account.username);

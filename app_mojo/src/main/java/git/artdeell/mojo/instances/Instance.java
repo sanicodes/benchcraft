@@ -72,6 +72,19 @@ public class Instance extends DisplayInstance {
      * @param bitmap the target bitmap
      * @throws IOException in case of errors while storing the icon
      */
+    /** @return whether the instance has a custom icon image */
+    public boolean hasCustomIcon() {
+        return getInstanceIconLocation().isFile();
+    }
+
+    /** Delete the custom icon image, so that the static icon gets shown again */
+    public void removeCustomIcon() {
+        File iconLocation = getInstanceIconLocation();
+        if(iconLocation.exists() && !iconLocation.delete()) {
+            Log.w("Instance", "Failed to delete the custom icon");
+        }
+    }
+
     public void encodeNewIcon(Bitmap bitmap) throws IOException {
         try(FileOutputStream fileOutputStream = new FileOutputStream(getInstanceIconLocation())) {
             bitmap.compress(

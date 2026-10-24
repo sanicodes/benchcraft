@@ -2,8 +2,8 @@ package git.artdeell.mojo.fragments.instance;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,12 +51,20 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
     private Instance mInstance;
     private String mSelectedControlLayout;
     private Button mSaveButton, mDeleteButton, mControlSelectButton, mVersionSelectButton, mManageModsButton;
+    private Button mIconUploadButton, mIconModrinthButton;
+    private ImageButton mIconRemoveButton;
+    private LinearLayout mIconPresetContainer;
     private Spinner mDefaultRuntime, mDefaultRenderer;
     private EditText mDefaultName, mDefaultJvmArgument;
     private TextView mDefaultVersion, mDefaultControl, mVersionLabel, mSharedDataLabel;
     private ImageView mInstanceIcon;
     private CheckBox mSharedDataCheckbox;
     private int mRecommendedIconSize;
+    /* Icon changes are kept here until the instance gets saved */
+    private boolean mIconStateLoaded;
+    private String mSelectedStaticIcon;
+    private boolean mHasCustomIcon;
+    private Bitmap mPendingCustomIcon;
     private final ActivityResultLauncher<?> mCropperLauncher = CropperUtils.registerCropper(this, this);
 
     private List<String> mRenderNames;
@@ -106,12 +116,22 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         mVersionSelectButton.setOnClickListener(versionSelectListener);
         mDefaultVersion.setOnClickListener(versionSelectListener);
 
-        // Set up the icon change click listener
-        mInstanceIcon.setOnClickListener(v -> {
+        // Set up the icon change click listeners
+        View.OnClickListener iconUploadListener = v -> {
             // Fill recommended size on click to ge the most up to date data
-            mRecommendedIconSize = Math.max(v.getWidth(), v.getHeight());
+            mRecommendedIconSize = Math.max(mInstanceIcon.getWidth(), mInstanceIcon.getHeight());
             CropperUtils.startCropper(mCropperLauncher);
+        };
+        mInstanceIcon.setOnClickListener(iconUploadListener);
+        mIconUploadButton.setOnClickListener(iconUploadListener);
+        mIconRemoveButton.setOnClickListener(v -> {
+            mPendingCustomIcon = null;
+            mHasCustomIcon = false;
+            refreshIconViews();
         });
+        mIconModrinthButton.setOnClickListener(v -> ModrinthIconPickerDialog.show(v.getContext(), icon -> {
+            if(getView() != null) setPendingCustomIcon(icon);
+        }));
 
         mSharedDataCheckbox.setOnCheckedChangeListener((v,checked) ->{
             mInstance.sharedData = checked;
@@ -156,9 +176,14 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
 
     private void loadValues(@NonNull Instance instance, @NonNull Context context){
         mInstance = instance;
-        mInstanceIcon.setImageDrawable(
-                InstanceIconProvider.fetchIcon(getResources(), instance)
-        );
+        // Keep unsaved icon changes when coming back from another screen (e.g. the control selector)
+        if(!mIconStateLoaded) {
+            mSelectedStaticIcon = instance.icon;
+            mHasCustomIcon = instance.hasCustomIcon();
+            mIconStateLoaded = true;
+        }
+        createIconPresets(context);
+        refreshIconViews();
         if(instance.platform != null) {
             mVersionSelectButton.setVisibility(View.GONE);
             mDefaultVersion.setVisibility(View.GONE);
@@ -191,6 +216,37 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         mSharedDataCheckbox.setChecked(instance.sharedData);
     }
 
+    private void createIconPresets(@NonNull Context context) {
+        mIconPresetContainer.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        for(String iconName : InstanceIconProvider.getStaticIconNames()) {
+            ImageView presetView = (ImageView) inflater.inflate(R.layout.item_instance_icon_preset, mIconPresetContainer, false);
+            presetView.setImageDrawable(InstanceIconProvider.getStaticIconDrawable(getResources(), iconName));
+            presetView.setContentDescription(getString(InstanceIconProvider.getStaticIconLabel(iconName)));
+            presetView.setTag(iconName);
+            presetView.setOnClickListener(v -> {
+                mSelectedStaticIcon = iconName;
+                mPendingCustomIcon = null;
+                mHasCustomIcon = false;
+                refreshIconViews();
+            });
+            mIconPresetContainer.addView(presetView);
+        }
+    }
+
+    private void refreshIconViews() {
+        Drawable icon;
+        if(mPendingCustomIcon != null) icon = InstanceIconProvider.createCustomIcon(getResources(), mPendingCustomIcon);
+        else if(mHasCustomIcon) icon = InstanceIconProvider.fetchIcon(getResources(), mInstance);
+        else icon = InstanceIconProvider.getStaticIconDrawable(getResources(), mSelectedStaticIcon);
+        mInstanceIcon.setImageDrawable(icon);
+        mIconRemoveButton.setVisibility(mHasCustomIcon ? View.VISIBLE : View.GONE);
+        for(int i = 0; i < mIconPresetContainer.getChildCount(); i++) {
+            View presetView = mIconPresetContainer.getChildAt(i);
+            presetView.setSelected(!mHasCustomIcon && presetView.getTag().equals(mSelectedStaticIcon));
+        }
+    }
+
     private void bindViews(@NonNull View view){
         mDefaultControl = view.findViewById(R.id.vprof_editor_ctrl_spinner);
         mDefaultRuntime = view.findViewById(R.id.vprof_editor_spinner_runtime);
@@ -209,6 +265,10 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         mSharedDataCheckbox = view.findViewById(R.id.vprof_editor_data_checkbox_container);
         mSharedDataLabel = view.findViewById(R.id.vprof_editor_data_checkbox_sub);
         mManageModsButton = view.findViewById(R.id.vprof_editor_manage_mods);
+        mIconUploadButton = view.findViewById(R.id.vprof_editor_icon_upload);
+        mIconRemoveButton = view.findViewById(R.id.vprof_editor_icon_remove);
+        mIconModrinthButton = view.findViewById(R.id.vprof_editor_icon_modrinth);
+        mIconPresetContainer = view.findViewById(R.id.vprof_editor_icon_presets);
     }
 
     private void save(){
@@ -232,10 +292,18 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
             if(!newName.isEmpty() && !newName.equals(mInstance.name))
                 Instances.renameInstanceDirectory(mInstance, newName);
             mInstance.name = newName;
+            saveIcon();
             mInstance.write();
         }catch (Exception e) {
             Tools.showErrorRemote(e);
         }
+    }
+
+    /** Apply the icon changes. Runs after a rename, so that the icon file ends up in the new directory. */
+    private void saveIcon() throws IOException {
+        mInstance.icon = mSelectedStaticIcon;
+        if(mPendingCustomIcon != null) mInstance.encodeNewIcon(mPendingCustomIcon);
+        else if(!mHasCustomIcon) mInstance.removeCustomIcon();
     }
 
     @Override
@@ -248,15 +316,16 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         return mRecommendedIconSize;
     }
 
+    /** Show a new custom icon. It's only written to the instance on save. */
+    private void setPendingCustomIcon(Bitmap icon) {
+        mPendingCustomIcon = icon;
+        mHasCustomIcon = true;
+        refreshIconViews();
+    }
+
     @Override
     public void onCropped(Bitmap contentBitmap) {
-        mInstanceIcon.setImageBitmap(contentBitmap);
-        Log.i("bitmap", "w="+contentBitmap.getWidth() +" h="+contentBitmap.getHeight());
-        try {
-            mInstance.encodeNewIcon(contentBitmap);
-        }catch (IOException e) {
-            Tools.showErrorRemote(e);
-        }
+        setPendingCustomIcon(contentBitmap);
     }
 
     @Override

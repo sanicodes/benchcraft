@@ -16,7 +16,7 @@ public class ReadFromDiskTask implements Runnable {
     ReadFromDiskTask(ModIconCache iconCache, ImageReceiver imageReceiver, String cacheTag, String imageUrl) {
         this.iconCache = iconCache;
         this.imageReceiver = imageReceiver;
-        this.cacheFile = new File(iconCache.cachePath, cacheTag+".ca");
+        this.cacheFile = new File(iconCache.cachePath, cacheTag + ModIconCache.CACHE_FILE_SUFFIX);
         this.imageUrl = imageUrl;
     }
 

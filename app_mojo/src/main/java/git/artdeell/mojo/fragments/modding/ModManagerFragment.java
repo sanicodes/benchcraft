@@ -18,7 +18,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.math.MathUtils;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -340,33 +339,9 @@ public class ModManagerFragment extends Fragment implements ModAdapter.ModListLi
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         mModRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        setupOverlay(mOverlay);
+        Tools.setupResizableOverlayView(mModRecyclerView, mOverlay);
         mModAdapter = null;
         updateTabs();
         refreshContent();
-    }
-
-    /**
-     * Like {@link Tools#setupOverlayView}, but keeps the list padding in sync when the overlay changes height.
-     */
-    private void setupOverlay(View overlayView) {
-        float overlayTop = getResources().getDimension(R.dimen.fragment_padding_medium);
-        int basePadding = mModRecyclerView.getPaddingTop();
-        mModRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                overlayView.setY(MathUtils.clamp(overlayView.getY() - dy, -overlayView.getHeight(), overlayTop));
-            }
-        });
-        overlayView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            if(bottom - top == oldBottom - oldTop) return;
-            int padding = basePadding + (int) (bottom - top + overlayTop);
-            mModRecyclerView.post(() -> {
-                mModRecyclerView.setPadding(mModRecyclerView.getPaddingLeft(), padding,
-                        mModRecyclerView.getPaddingRight(), mModRecyclerView.getPaddingBottom());
-                overlayView.setY(overlayTop);
-                mModRecyclerView.scrollToPosition(0);
-            });
-        });
     }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Preference row: icon badge, title and summary, then the widget (switch etc.) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false"
+    android:clipToPadding="false"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:paddingStart="@dimen/padding_large"
+    android:paddingEnd="@dimen/padding_large">
+
+    <FrameLayout
+        android:id="@+id/icon_frame"
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="@dimen/icon_badge_size"
+        android:layout_marginEnd="@dimen/padding_large"
+        android:background="@drawable/background_icon_badge_neutral">
+
+        <ImageView
+            android:id="@android:id/icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="10"
+            android:textAlignment="viewStart"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/_10ssp" />
+    </LinearLayout>
+
+    <!-- Preference should place its actual preference widget here. -->
+    <LinearLayout
+        android:id="@android:id/widget_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/padding_large" />
+</LinearLayout>

@@ -18,12 +18,42 @@
         android:layout_marginHorizontal="@dimen/fragment_padding_medium"
         app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:id="@+id/mod_browser_tabs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/mod_browser_tab_mods"
+                style="@style/ModManagerTab"
+                android:text="@string/content_type_mods" />
+
+            <TextView
+                android:id="@+id/mod_browser_tab_resource_packs"
+                style="@style/ModManagerTab"
+                android:text="@string/content_type_resource_packs" />
+
+            <TextView
+                android:id="@+id/mod_browser_tab_shaders"
+                style="@style/ModManagerTab"
+                android:text="@string/content_type_shaders" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/search_mod_edittext"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/padding_medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_medium"
-            android:background="@drawable/background_line"
+            android:background="@drawable/background_input"
             android:textSize="@dimen/_13ssp"
             android:translationZ="2dp"
             android:ems="10"
@@ -31,7 +61,7 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingHorizontal="@dimen/padding_heavy"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mod_browser_tabs"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mod_browser_sort_spinner" />
 
@@ -39,12 +69,23 @@
             android:id="@+id/mod_browser_sort_spinner"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@drawable/background_line"
-            android:paddingHorizontal="@dimen/padding_moderate"
+            android:background="@drawable/background_input"
+            android:paddingStart="@dimen/padding_moderate"
+            android:paddingEnd="@dimen/_22sdp"
             android:minWidth="@dimen/_80sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
             app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
+
+        <ImageView
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/padding_moderate"
+            android:importantForAccessibility="no"
+            android:src="@drawable/spinner_arrow_down"
+            app:layout_constraintEnd_toEndOf="@id/mod_browser_sort_spinner"
+            app:layout_constraintTop_toTopOf="@id/mod_browser_sort_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/mod_browser_sort_spinner" />
 
         <TextView
             android:id="@+id/mod_browser_filter_textview"

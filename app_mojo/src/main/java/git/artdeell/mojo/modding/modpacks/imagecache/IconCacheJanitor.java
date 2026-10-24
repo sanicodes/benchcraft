@@ -32,6 +32,8 @@ public class IconCacheJanitor implements Runnable{
         long directoryFileSize = 0;
         for(File modIconFile : modIconFiles) {
             if(!modIconFile.isFile() || !modIconFile.canRead()) continue;
+            // Left over from an older cache format, nothing reads these anymore
+            if(!modIconFile.getName().endsWith(ModIconCache.CACHE_FILE_SUFFIX) && modIconFile.delete()) continue;
             directoryFileSize += modIconFile.length();
             if(!modIconFile.canWrite()) continue;
             writableModIconFiles.add(modIconFile);

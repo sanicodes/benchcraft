@@ -7,43 +7,270 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:statusBarColor">@color/background_status_bar</item>
         <item name="android:navigationBarColor">@color/background_app</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/MojoLauncher.PreferenceTheme</item>
         <item name="android:textSize">@dimen/_12ssp</item>
-        <item name="dialogCornerRadius">0dp</item>
+
+        <!-- Palette -->
+        <item name="colorPrimary">@color/surface_base</item>
+        <item name="colorPrimaryDark">@color/surface_base</item>
+        <item name="colorAccent">@color/brand</item>
+        <item name="colorControlNormal">@color/text_muted</item>
+        <item name="colorControlActivated">@color/brand</item>
+        <item name="colorControlHighlight">@color/ripple</item>
+        <item name="colorButtonNormal">@color/surface_button</item>
+        <item name="android:colorBackground">@color/surface_base</item>
+        <item name="android:windowBackground">@color/surface_base</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorTertiary">@color/text_hint</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="android:textColorHighlight">@color/brand_highlight</item>
+        <item name="android:textColorLink">@color/brand</item>
+        <item name="android:listDivider">@color/divider</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+
+        <!-- Shapes and widgets -->
+        <item name="dialogCornerRadius">@dimen/radius_large</item>
+        <item name="alertDialogTheme">@style/MojoLauncher.AlertDialog</item>
+        <item name="dialogTheme">@style/MojoLauncher.Dialog</item>
         <item name="android:seekBarStyle">@style/MojoLauncher.SeekBar</item>
         <item name="seekBarStyle">@style/MojoLauncher.SeekBar</item>
         <item name="android:switchStyle">@style/MojoLauncher.Switch</item>
         <item name="switchStyle">@style/MojoLauncher.Switch</item>
         <item name="buttonStyle">@style/MojoLauncher.Button</item>
         <item name="android:buttonStyleToggle">@style/MojoLauncher.Button.Toggle</item>
+        <item name="borderlessButtonStyle">@style/MojoLauncher.Button.Borderless</item>
+        <item name="editTextStyle">@style/MojoLauncher.EditText</item>
+        <item name="spinnerStyle">@style/MojoLauncher.Spinner</item>
+        <item name="android:spinnerStyle">@style/MojoLauncher.Spinner</item>
+        <item name="android:dropDownListViewStyle">@style/MojoLauncher.DropDownListView</item>
+        <item name="dropDownListViewStyle">@style/MojoLauncher.DropDownListView</item>
+        <item name="listPopupWindowStyle">@style/MojoLauncher.ListPopupWindow</item>
+        <item name="popupMenuStyle">@style/MojoLauncher.PopupMenu</item>
+        <item name="android:popupMenuStyle">@style/MojoLauncher.PopupMenu</item>
+        <item name="android:progressBarStyleHorizontal">@style/MojoLauncher.ProgressBar.Horizontal</item>
     </style>
 
     <style name="MojoLauncher.AppTheme" parent="MojoLauncher"/>
 
+    <!-- Dialogs -->
+    <style name="MojoLauncher.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/background_dialog</item>
+        <item name="colorAccent">@color/brand</item>
+        <item name="colorControlActivated">@color/brand</item>
+        <item name="colorControlHighlight">@color/ripple</item>
+        <item name="android:textColorPrimary">@color/text_contrast</item>
+        <item name="android:textColorSecondary">@color/text_base</item>
+        <item name="android:textColorAlertDialogListItem">@color/text_contrast</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="editTextStyle">@style/MojoLauncher.EditText</item>
+        <item name="buttonBarPositiveButtonStyle">@style/MojoLauncher.DialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MojoLauncher.DialogButton.Secondary</item>
+        <item name="buttonBarNeutralButtonStyle">@style/MojoLauncher.DialogButton.Secondary</item>
+    </style>
+
+    <style name="MojoLauncher.Dialog" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/background_dialog</item>
+        <item name="colorAccent">@color/brand</item>
+        <item name="android:textColorPrimary">@color/text_contrast</item>
+        <item name="android:textColorSecondary">@color/text_base</item>
+    </style>
+
+    <style name="MojoLauncher.DialogButton" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:background">@drawable/button_borderless</item>
+        <item name="android:textColor">@color/brand</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <style name="MojoLauncher.DialogButton.Secondary">
+        <item name="android:textColor">@color/text_base</item>
+    </style>
+
+    <!-- Inputs -->
     <style name="MojoLauncher.SeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="android:progressDrawable">@drawable/minepb_progress</item>
-        <item name="android:thumb">@drawable/mineknob_on_unfiltered</item>
-        <item name="android:thumbOffset">0dp</item>
+        <item name="android:thumb">@drawable/seekbar_thumb</item>
+        <item name="android:splitTrack">false</item>
         <item name="android:maxHeight">4dp</item>
         <item name="android:minHeight">4dp</item>
     </style>
 
     <style name="MojoLauncher.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="track">@drawable/mineknob_track_mask_unfiltered</item>
-        <item name="trackTint">@color/mineknob_track_tint</item>
-        <item name="trackTintMode">multiply</item>
-        <item name="android:thumb">@drawable/mineknob_switch</item>
-        <item name="switchMinWidth">40dp</item>
+        <item name="track">@drawable/switch_track</item>
+        <item name="android:track">@drawable/switch_track</item>
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="showText">false</item>
+        <item name="switchMinWidth">44dp</item>
+        <item name="android:switchMinWidth">44dp</item>
+        <item name="switchPadding">@dimen/padding_heavy</item>
     </style>
 
+    <style name="MojoLauncher.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/background_input</item>
+        <item name="android:minHeight">@dimen/input_min_height</item>
+        <item name="android:paddingLeft">@dimen/padding_heavy</item>
+        <item name="android:paddingRight">@dimen/padding_heavy</item>
+        <item name="android:textColor">@color/text_contrast</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+    </style>
+
+    <style name="MojoLauncher.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">@drawable/background_popup</item>
+        <item name="android:dropDownVerticalOffset">4dp</item>
+        <item name="android:popupElevation">8dp</item>
+    </style>
+
+    <style name="MojoLauncher.DropDownListView" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@null</item>
+        <item name="android:listSelector">@drawable/background_list_item</item>
+    </style>
+
+    <style name="MojoLauncher.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/background_popup</item>
+        <item name="android:popupElevation">8dp</item>
+    </style>
+
+    <style name="MojoLauncher.PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/background_popup</item>
+        <item name="android:popupElevation">8dp</item>
+    </style>
+
+    <style name="MojoLauncher.ProgressBar.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/brand</item>
+        <item name="android:indeterminateTint">@color/brand</item>
+        <item name="android:progressBackgroundTint">@color/surface_button</item>
+    </style>
+
+    <!-- Buttons -->
     <style name="MojoLauncher.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_flat</item>
+        <item name="android:textColor">@color/text_contrast</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="android:paddingLeft">@dimen/padding_large</item>
+        <item name="android:paddingRight">@dimen/padding_large</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="MojoLauncher.Button.Toggle" parent="MojoLauncher.Button">
+    <style name="MojoLauncher.Button.Toggle">
         <item name="android:background">@drawable/button_flat_toggle</item>
     </style>
 
+    <style name="MojoLauncher.Button.Borderless">
+        <item name="android:background">@drawable/button_borderless</item>
+        <item name="android:textColor">@color/brand</item>
+    </style>
+
+    <style name="MojoLauncher.Button.Danger">
+        <item name="android:background">@drawable/button_danger</item>
+        <item name="android:textColor">@color/danger</item>
+    </style>
+
+    <style name="MojoLauncher.IconButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/button_icon</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="tint">@color/text_base</item>
+    </style>
+
+    <!-- Text -->
+    <style name="MojoLauncher.Text.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_contrast</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/_15ssp</item>
+    </style>
+
+    <style name="MojoLauncher.Text.Section" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/text_muted</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="MojoLauncher.Text.Label" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/text_base</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
+    </style>
+
+    <!-- Tappable tile with a leading icon and a chevron, for ExtendedTextView -->
+    <style name="MojoLauncher.OptionRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/_48sdp</item>
+        <item name="android:background">@drawable/background_tile</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingHorizontal">@dimen/padding_heavy</item>
+        <item name="android:paddingVertical">@dimen/padding_moderate</item>
+        <item name="android:drawableEnd">@drawable/ic_chevron_right</item>
+        <item name="android:drawablePadding">@dimen/padding_heavy</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/text_contrast</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
+        <item name="drawableStartSize">@dimen/_24sdp</item>
+        <item name="drawableEndSize">@dimen/_16sdp</item>
+    </style>
+
+    <!-- Preferences -->
+    <style name="MojoLauncher.PreferenceTheme" parent="PreferenceThemeOverlay">
+        <item name="preferenceStyle">@style/MojoLauncher.Preference</item>
+        <item name="preferenceScreenStyle">@style/MojoLauncher.Preference</item>
+        <item name="dialogPreferenceStyle">@style/MojoLauncher.Preference.Dialog</item>
+        <item name="editTextPreferenceStyle">@style/MojoLauncher.Preference.EditText</item>
+        <item name="switchPreferenceCompatStyle">@style/MojoLauncher.Preference.Switch</item>
+        <item name="seekBarPreferenceStyle">@style/MojoLauncher.Preference.SeekBar</item>
+        <item name="preferenceCategoryStyle">@style/MojoLauncher.Preference.Category</item>
+        <item name="preferenceFragmentCompatStyle">@style/MojoLauncher.PreferenceFragment</item>
+        <item name="preferenceCategoryTitleTextAppearance">@style/MojoLauncher.Text.Section</item>
+        <item name="preferenceCategoryTitleTextColor">@color/brand</item>
+    </style>
+
+    <style name="MojoLauncher.PreferenceFragment" parent="PreferenceFragment.Material">
+        <item name="android:divider">@null</item>
+    </style>
+
+    <style name="MojoLauncher.Preference" parent="Preference.Material">
+        <item name="android:layout">@layout/preference_item</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
+
+    <style name="MojoLauncher.Preference.Dialog" parent="Preference.DialogPreference.Material">
+        <item name="android:layout">@layout/preference_item</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
+
+    <style name="MojoLauncher.Preference.EditText" parent="Preference.DialogPreference.EditTextPreference.Material">
+        <item name="android:layout">@layout/preference_item</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
+
+    <style name="MojoLauncher.Preference.Switch" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="android:layout">@layout/preference_item</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
+
+    <style name="MojoLauncher.Preference.SeekBar" parent="Preference.SeekBarPreference.Material">
+        <item name="android:layout">@layout/preference_item_seekbar</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
+
+    <style name="MojoLauncher.Preference.Category" parent="Preference.Category.Material">
+        <item name="android:layout">@layout/preference_item_category</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="allowDividerBelow">false</item>
+        <item name="iconSpaceReserved">true</item>
+    </style>
 
     <style name="LauncherFragment_Divider">
         <item name="android:layout_width">@dimen/padding_tiny</item>
@@ -61,8 +288,8 @@
 
     <style name="ThickDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/_1sdp</item>
-        <item name="android:background">?android:attr/listDivider</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/divider</item>
     </style>
 
     <style name="ModManagerTab" parent="TextAppearance.AppCompat.Body2">
@@ -73,10 +300,11 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">1</item>
-        <item name="android:paddingLeft">@dimen/padding_small</item>
-        <item name="android:paddingRight">@dimen/padding_small</item>
+        <item name="android:paddingLeft">@dimen/padding_moderate</item>
+        <item name="android:paddingRight">@dimen/padding_moderate</item>
         <item name="android:paddingTop">@dimen/padding_moderate</item>
         <item name="android:paddingBottom">@dimen/padding_moderate</item>
         <item name="android:textColor">@color/tab_text_color</item>

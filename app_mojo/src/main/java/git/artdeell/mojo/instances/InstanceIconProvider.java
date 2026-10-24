@@ -3,16 +3,19 @@ package git.artdeell.mojo.instances;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import git.artdeell.mojo.R;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,14 +23,22 @@ public class InstanceIconProvider {
     public static final String FALLBACK_ICON_NAME = "default";
     private static final Map<Integer, Drawable> sIconCache = new HashMap<>();
     private static final Map<String, Drawable> sStaticIconCache = new HashMap<>();
-    private static final Map<String, Integer> sStaticIcons = new HashMap<>();
+    /** Static icons in the order they are offered in the icon picker */
+    private static final Map<String, Integer> sStaticIcons = new LinkedHashMap<>();
+    private static final Map<String, Integer> sStaticIconLabels = new HashMap<>();
 
     static {
-        sStaticIcons.put("default", R.drawable.ic_mojo_full);
-        sStaticIcons.put("fabric", R.drawable.ic_fabric);
-        sStaticIcons.put("quilt", R.drawable.ic_quilt);
-        sStaticIcons.put("forge", R.drawable.ic_forge);
-        sStaticIcons.put("neoforge", R.drawable.ic_neoforge);
+        addStaticIcon("default", R.drawable.ic_mojo_full, R.string.instance_icon_default);
+        addStaticIcon("crafting_table", R.drawable.ic_instance_crafting_table, R.string.instance_icon_crafting_table);
+        addStaticIcon("fabric", R.drawable.ic_fabric, R.string.instance_icon_fabric);
+        addStaticIcon("quilt", R.drawable.ic_quilt, R.string.instance_icon_quilt);
+        addStaticIcon("forge", R.drawable.ic_forge, R.string.instance_icon_forge);
+        addStaticIcon("neoforge", R.drawable.ic_neoforge, R.string.instance_icon_neoforge);
+    }
+
+    private static void addStaticIcon(String name, int drawable, @StringRes int label) {
+        sStaticIcons.put(name, drawable);
+        sStaticIconLabels.put(name, label);
     }
 
     /**
@@ -37,6 +48,10 @@ public class InstanceIconProvider {
      * @return an icon drawable
      */
     public static @NonNull Drawable fetchIcon(Resources resources, @NonNull DisplayInstance instance) {
+        return copyIcon(resources, fetchCachedIcon(resources, instance));
+    }
+
+    private static @NonNull Drawable fetchCachedIcon(Resources resources, @NonNull DisplayInstance instance) {
         int identityHashCode = System.identityHashCode(instance);
 
         Drawable cachedIcon = sIconCache.get(identityHashCode);
@@ -46,6 +61,20 @@ public class InstanceIconProvider {
         if(instanceIcon != null) return instanceIcon;
 
         return fetchStaticIcon(resources, identityHashCode, instance.icon);
+    }
+
+    /**
+     * Views resize the drawables they display, so a cached drawable shared between views ends up
+     * drawn at whichever size was set last. Every caller gets a copy that shares the image data
+     * but has its own bounds.
+     */
+    private static @NonNull Drawable copyIcon(Resources resources, @NonNull Drawable icon) {
+        if(icon instanceof RoundedBitmapDrawable) {
+            Bitmap iconBitmap = ((RoundedBitmapDrawable) icon).getBitmap();
+            if(iconBitmap != null) return createCustomIcon(resources, iconBitmap);
+        }
+        Drawable.ConstantState iconState = icon.getConstantState();
+        return iconState != null ? iconState.newDrawable(resources) : icon;
     }
 
     /**
@@ -61,8 +90,21 @@ public class InstanceIconProvider {
         if(!iconLocation.isFile() || !iconLocation.canRead()) return null;
         Bitmap iconBitmap = BitmapFactory.decodeFile(iconLocation.getAbsolutePath());
         if(iconBitmap == null) return null;
-        Drawable iconDrawable = new BitmapDrawable(resources, iconBitmap);
+        Drawable iconDrawable = createCustomIcon(resources, iconBitmap);
         sIconCache.put(identityHash, iconDrawable);
+        return iconDrawable;
+    }
+
+    /**
+     * Wrap a custom icon image into a drawable with rounded corners, like the rest of the launcher.
+     * @param resources the Resources object, used for creating drawables
+     * @param iconBitmap the icon image
+     * @return the icon drawable
+     */
+    public static @NonNull Drawable createCustomIcon(Resources resources, @NonNull Bitmap iconBitmap) {
+        RoundedBitmapDrawable iconDrawable = RoundedBitmapDrawableFactory.create(resources, iconBitmap);
+        iconDrawable.setCornerRadius(Math.min(iconBitmap.getWidth(), iconBitmap.getHeight()) * 0.2f);
+        iconDrawable.setAntiAlias(true);
         return iconDrawable;
     }
 
@@ -96,6 +138,31 @@ public class InstanceIconProvider {
         Integer iconResource = sStaticIcons.get(icon);
         if(iconResource == null) return -1;
         return iconResource;
+    }
+
+    /**
+     * Load a static icon, falling back to the default icon for unknown names.
+     * @param resources the Resources object, used for creating drawables
+     * @param name static icon name
+     * @return the icon drawable
+     */
+    public static @NonNull Drawable getStaticIconDrawable(Resources resources, String name) {
+        Drawable staticIcon = name != null ? getStaticIcon(resources, name) : null;
+        return staticIcon != null ? staticIcon : copyIcon(resources, fetchFallbackIcon(resources));
+    }
+
+    /** @return the names of all static icons, in the order they should be offered to the user */
+    public static Iterable<String> getStaticIconNames() {
+        return sStaticIcons.keySet();
+    }
+
+    /**
+     * @param name static icon name
+     * @return the string resource describing the icon
+     */
+    public static @StringRes int getStaticIconLabel(String name) {
+        Integer label = sStaticIconLabels.get(name);
+        return label != null ? label : R.string.instance_icon_default;
     }
 
     /**

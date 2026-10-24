@@ -106,11 +106,13 @@
 
         <EditText
             android:id="@+id/search_mod_edittext"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/padding_medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
             android:layout_marginEnd="@dimen/padding_medium"
-            android:background="@drawable/background_line"
+            android:background="@drawable/background_input"
             android:textSize="@dimen/_13ssp"
             android:translationZ="2dp"
             android:ems="10"
@@ -126,12 +128,23 @@
             android:id="@+id/mod_manager_sort_spinner"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@drawable/background_line"
-            android:paddingHorizontal="@dimen/padding_moderate"
+            android:background="@drawable/background_input"
+            android:paddingStart="@dimen/padding_moderate"
+            android:paddingEnd="@dimen/_22sdp"
             android:minWidth="@dimen/_80sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
             app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
+
+        <ImageView
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/padding_moderate"
+            android:importantForAccessibility="no"
+            android:src="@drawable/spinner_arrow_down"
+            app:layout_constraintEnd_toEndOf="@id/mod_manager_sort_spinner"
+            app:layout_constraintTop_toTopOf="@id/mod_manager_sort_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/mod_manager_sort_spinner" />
 
         <ProgressBar
             android:id="@+id/search_mod_progressbar"

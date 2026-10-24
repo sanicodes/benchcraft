@@ -48,7 +48,9 @@ class DownloadImageTask implements Runnable {
             bitmap.recycle();
             if(resizedBitmap == bitmap) return true;
             try (FileOutputStream fileOutputStream = new FileOutputStream(mParentTask.cacheFile)) {
-                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream);
+                // JPEG has no transparency, so keep icons with transparent parts as PNG
+                Bitmap.CompressFormat format = resizedBitmap.hasAlpha() ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
+                resizedBitmap.compress(format, 80, fileOutputStream);
             } finally {
                 resizedBitmap.recycle();
             }

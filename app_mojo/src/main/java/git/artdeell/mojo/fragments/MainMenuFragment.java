@@ -127,7 +127,7 @@ public class MainMenuFragment extends Fragment {
     private void applyInstanceSummary(@Nullable InstanceSummary summary) {
         if(summary == null) {
             mInstanceDetails.setText(R.string.no_instance);
-            mInstanceRenderer.setText(null);
+            mInstanceRenderer.setVisibility(View.GONE);
             setTileSubtitle(mModsTile, null);
             setTileSubtitle(mControlsTile, null);
             return;
@@ -135,6 +135,7 @@ public class MainMenuFragment extends Fragment {
         String loaderName = summary.platform != null ? ModTarget.getLoaderName(summary.platform) : getString(R.string.dashboard_vanilla);
         mInstanceDetails.setText(getString(R.string.dashboard_instance_details, loaderName, getVersionName(summary.mcVersion)));
         mInstanceRenderer.setText(getString(R.string.dashboard_renderer, getRendererName(summary.renderer)));
+        mInstanceRenderer.setVisibility(View.VISIBLE);
         setTileSubtitle(mControlsTile, getString(R.string.dashboard_controls_layout, summary.controlLayout));
 
         setTileSubtitle(mModsTile, getContentSummary(summary));
