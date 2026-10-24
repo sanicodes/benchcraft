@@ -80,7 +80,7 @@ public class ModScanner {
                     modInfo = new CorruptModInfo(mModFile, CorruptModInfo.CORRUPTION_REASON_NOT_A_MOD);
                 } else {
                     BasicModInfo basicModInfo = infos[0];
-                    modInfo = new ContainedModInfo(mModFile, modFile, createSearchTerms(basicModInfo));
+                    modInfo = new ContainedModInfo(mModFile, modFile, basicModInfo.getName(), createSearchTerms(basicModInfo));
                 }
             } catch (ModInfoParseException e){
                 modInfo = new CorruptModInfo(mModFile, CorruptModInfo.CORRUPTION_REASON_NOT_A_MOD);

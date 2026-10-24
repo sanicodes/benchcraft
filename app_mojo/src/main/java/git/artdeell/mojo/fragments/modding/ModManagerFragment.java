@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -26,7 +30,10 @@ import git.artdeell.mojo.instances.Instances;
 import git.artdeell.mojo.modding.modmanager.ModAdapter;
 import git.artdeell.mojo.modding.modmanager.ModInfo;
 import git.artdeell.mojo.modding.modmanager.ModScanner;
+import git.artdeell.mojo.modding.modmanager.ModSorter;
 import git.artdeell.mojo.modding.modmanager.ModTarget;
+import git.artdeell.mojo.modding.modmanager.ModrinthModApi;
+import git.artdeell.mojo.prefs.LauncherPreferences;
 import git.artdeell.mojo.utils.FileUtils;
 
 import org.apache.commons.io.IOUtils;
@@ -45,7 +52,11 @@ import git.artdeell.mojo.R;
 
 public class ModManagerFragment extends Fragment implements ModAdapter.ModListListener {
     public static final String TAG = "ModManagerFragment";
+    private static final String PREF_SORT = "modManagerSort";
     private RecyclerView mModRecyclerView;
+    private Spinner mSortSpinner;
+    private boolean mModrinthStatsLoaded;
+    private ModAdapter mStatsLoadingAdapter;
     private ProgressBar mProgressBar;
     private EditText mSearchEditText;
     private TextView mSummaryTextView;
@@ -91,7 +102,7 @@ public class ModManagerFragment extends Fragment implements ModAdapter.ModListLi
             List<ModInfo> modInfoList = null;
             if(modTarget != null) modInfoList = ModScanner.findMods(modTarget.modsDirectory, modTarget.platform);
             if(modInfoList == null) modInfoList = new ArrayList<>();
-            Collections.sort(modInfoList, (a, b) -> a.getDisplayFileName().compareToIgnoreCase(b.getDisplayFileName()));
+            Collections.sort(modInfoList, ModSorter.comparator(ModSorter.SORT_NAME));
             List<ModInfo> finalModInfoList = modInfoList;
             Tools.runOnUiThread(()->{
                 if(getView() == null) return;
@@ -102,8 +113,39 @@ public class ModManagerFragment extends Fragment implements ModAdapter.ModListLi
                     return;
                 }
                 mModAdapter = new ModAdapter(finalModInfoList, modTarget.platform, this);
+                mModrinthStatsLoaded = false;
                 mModRecyclerView.setAdapter(mModAdapter);
                 applySearch();
+                applySort();
+            });
+        });
+    }
+
+    private void applySort() {
+        if(mModAdapter == null) return;
+        int sort = mSortSpinner.getSelectedItemPosition();
+        if(ModSorter.needsModrinthStats(sort) && !mModrinthStatsLoaded) {
+            loadModrinthStats();
+            return;
+        }
+        mModAdapter.sort(ModSorter.comparator(sort));
+    }
+
+    private void loadModrinthStats() {
+        if(mStatsLoadingAdapter == mModAdapter) return;
+        ModAdapter adapter = mModAdapter;
+        mStatsLoadingAdapter = adapter;
+        mProgressBar.setVisibility(View.VISIBLE);
+        List<ModInfo> mods = adapter.getMods();
+        MojoApplication.sExecutorService.execute(()->{
+            boolean loaded = ModSorter.loadModrinthStats(new ModrinthModApi(), mods);
+            Tools.runOnUiThread(()->{
+                if(mStatsLoadingAdapter == adapter) mStatsLoadingAdapter = null;
+                if(getView() == null || adapter != mModAdapter) return;
+                mProgressBar.setVisibility(View.GONE);
+                if(!loaded) Toast.makeText(requireContext(), R.string.mod_browser_error, Toast.LENGTH_SHORT).show();
+                mModrinthStatsLoaded = loaded;
+                adapter.sort(ModSorter.comparator(mSortSpinner.getSelectedItemPosition()));
             });
         });
     }
@@ -162,6 +204,23 @@ public class ModManagerFragment extends Fragment implements ModAdapter.ModListLi
             public void afterTextChanged(Editable s) {
                 applySearch();
             }
+        });
+        mSortSpinner = view.findViewById(R.id.mod_manager_sort_spinner);
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.mod_manager_sort_names, android.R.layout.simple_spinner_item);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSortSpinner.setAdapter(sortAdapter);
+        int savedSort = LauncherPreferences.DEFAULT_PREF.getInt(PREF_SORT, ModSorter.SORT_NAME);
+        if(savedSort >= 0 && savedSort < sortAdapter.getCount()) mSortSpinner.setSelection(savedSort);
+        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View itemView, int position, long id) {
+                LauncherPreferences.DEFAULT_PREF.edit().putInt(PREF_SORT, position).apply();
+                applySort();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
         mModRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Tools.setupOverlayView(mModRecyclerView, mOverlay);

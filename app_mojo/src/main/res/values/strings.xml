@@ -533,6 +533,14 @@
     <string name="mod_manager_delete_message">This removes the file from the instance\'s mods folder.</string>
     <string name="mod_manager_no_loader">This instance has no mod loader</string>
     <string name="mod_manager_toggle_failed">Couldn\'t enable or disable this mod</string>
+    <string-array name="mod_manager_sort_names">
+        <item>Name</item>
+        <item>Downloads</item>
+        <item>Follows</item>
+        <item>Newest</item>
+        <item>Updated</item>
+    </string-array>
+    <string name="main_manage_mods_no_loader">Mods need a Fabric, Quilt, Forge or NeoForge instance</string>
     <string name="mod_browser_search_hint">Search Modrinth</string>
     <string name="mod_browser_filter">%1$s mods for Minecraft %2$s</string>
     <string name="mod_browser_filter_any_version">%1$s mods (Minecraft version unknown, showing all)</string>

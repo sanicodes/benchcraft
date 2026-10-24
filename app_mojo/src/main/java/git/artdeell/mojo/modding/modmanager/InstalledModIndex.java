@@ -10,8 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import git.artdeell.mojo.utils.HashUtils;
 
@@ -21,6 +25,7 @@ import git.artdeell.mojo.utils.HashUtils;
 public class InstalledModIndex {
     private final HashMap<String, File> mProjectFiles = new HashMap<>();
     private final HashMap<String, String> mProjectVersions = new HashMap<>();
+    private final HashMap<File, String> mFileProjects = new HashMap<>();
 
     private InstalledModIndex() {}
 
@@ -33,16 +38,26 @@ public class InstalledModIndex {
      * Modrinth are simply missing from the index.
      */
     public static InstalledModIndex build(ModrinthModApi api, File modsDirectory) {
-        InstalledModIndex index = new InstalledModIndex();
         File[] files = modsDirectory.listFiles((dir, name) -> ModInfo.isModFileName(name));
-        if(files == null || files.length == 0) return index;
-        HashMap<String, File> filesByHash = new HashMap<>(files.length);
+        if(files == null) return new InstalledModIndex();
+        InstalledModIndex index = build(api, Arrays.asList(files));
+        return index != null ? index : new InstalledModIndex();
+    }
+
+    /**
+     * @return the index, or null if Modrinth couldn't be reached
+     */
+    @Nullable
+    public static InstalledModIndex build(ModrinthModApi api, Collection<File> files) {
+        InstalledModIndex index = new InstalledModIndex();
+        if(files.isEmpty()) return index;
+        HashMap<String, File> filesByHash = new HashMap<>(files.size());
         for(File file : files) {
             String hash = sha1(file);
             if(hash != null) filesByHash.put(hash, file);
         }
         Map<String, ModrinthVersion> versions = api.identifyFiles(filesByHash.keySet());
-        if(versions == null) return index;
+        if(versions == null) return null;
         for(Map.Entry<String, ModrinthVersion> entry : versions.entrySet()) {
             File file = filesByHash.get(entry.getKey());
             ModrinthVersion version = entry.getValue();
@@ -55,6 +70,16 @@ public class InstalledModIndex {
     synchronized void put(String projectId, String versionId, File file) {
         mProjectFiles.put(projectId, file);
         mProjectVersions.put(projectId, versionId);
+        mFileProjects.put(file, projectId);
+    }
+
+    public synchronized Set<String> getProjectIds() {
+        return new HashSet<>(mProjectFiles.keySet());
+    }
+
+    @Nullable
+    public synchronized String getProjectId(File file) {
+        return mFileProjects.get(file);
     }
 
     public synchronized boolean isInstalled(String projectId) {

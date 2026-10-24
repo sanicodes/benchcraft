@@ -1,5 +1,7 @@
 package git.artdeell.mojo.modding.modmanager;
 
+import androidx.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -10,6 +12,7 @@ public abstract class ModInfo {
     public File jarFile;
     public final String searchTerms;
     public boolean expanded;
+    @Nullable public ModrinthProjectStats modrinthStats;
 
     protected ModInfo(File jarFile, String searchTerms) {
         this.jarFile = jarFile;
@@ -35,6 +38,10 @@ public abstract class ModInfo {
         if(newFile.exists() || !jarFile.renameTo(newFile)) throw new IOException("Failed to rename "+name+" to "+newName);
         jarFile = newFile;
         onFileMoved(newFile);
+    }
+
+    public String getName() {
+        return getDisplayFileName();
     }
 
     public String getDisplayFileName() {

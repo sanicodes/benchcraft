@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class ModrinthModApi {
     public static final String SORT_FOLLOWS = "follows";
     public static final String SORT_NEWEST = "newest";
     public static final String SORT_UPDATED = "updated";
+    private static final int PROJECTS_PER_REQUEST = 100;
 
     private final ApiHandler mApiHandler;
 
@@ -94,6 +96,24 @@ public class ModrinthModApi {
         if(response == null) return null;
         for(Map.Entry<String, JsonElement> entry : response.entrySet()) {
             result.put(entry.getKey(), Tools.GLOBAL_GSON.fromJson(entry.getValue(), ModrinthVersion.class));
+        }
+        return result;
+    }
+
+    /**
+     * @return a map from project ID to its stats, or null if Modrinth couldn't be reached
+     */
+    @Nullable
+    public Map<String, ModrinthProjectStats> getProjectStats(Collection<String> projectIds) {
+        HashMap<String, ModrinthProjectStats> result = new HashMap<>();
+        String[] ids = projectIds.toArray(new String[0]);
+        for(int start = 0; start < ids.length; start += PROJECTS_PER_REQUEST) {
+            String[] chunk = Arrays.copyOfRange(ids, start, Math.min(ids.length, start + PROJECTS_PER_REQUEST));
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("ids", toJsonArray(chunk).toString());
+            ModrinthProjectStats[] projects = mApiHandler.get("projects", params, ModrinthProjectStats[].class);
+            if(projects == null) return null;
+            for(ModrinthProjectStats project : projects) result.put(project.id, project);
         }
         return result;
     }

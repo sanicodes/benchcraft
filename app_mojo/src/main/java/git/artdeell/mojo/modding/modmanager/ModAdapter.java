@@ -32,6 +32,9 @@ import git.artdeell.mojo.utils.FilteredSubList;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +52,7 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
     private final FilteredSubList<ModInfo> mDisplayModInfos;
     private final Platform mPlatform;
     private final ModListListener mListener;
+    private FilteredSubList.BasicPredicate<ModInfo> mSearchPredicate = i -> true;
 
     public ModAdapter(List<ModInfo> modInfos, Platform mPlatform, ModListListener listener)  {
         this.mModInfos = modInfos;
@@ -59,9 +63,21 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void performSearch(FilteredSubList.BasicPredicate<ModInfo> mModInfoPredicate) {
+        mSearchPredicate = mModInfoPredicate;
         mDisplayModInfos.refresh(mModInfos, mModInfoPredicate);
         notifyDataSetChanged();
         mListener.onModListChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void sort(Comparator<ModInfo> comparator) {
+        Collections.sort(mModInfos, comparator);
+        mDisplayModInfos.refresh(mModInfos, mSearchPredicate);
+        notifyDataSetChanged();
+    }
+
+    public List<ModInfo> getMods() {
+        return new ArrayList<>(mModInfos);
     }
 
     public int getModCount() {
