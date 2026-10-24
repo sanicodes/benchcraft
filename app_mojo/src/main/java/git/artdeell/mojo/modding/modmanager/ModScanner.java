@@ -44,7 +44,7 @@ public class ModScanner {
     }
 
     private void findModFiles(File directory) throws InterruptedException{
-        File[] files = directory.listFiles(((file,name) -> name.endsWith(".jar")));
+        File[] files = directory.listFiles(((file,name) -> ModInfo.isModFileName(name)));
         File[] directories = directory.listFiles(File::isDirectory);
         if(directories != null) for(File f : directories) findModFiles(f);
         if(files == null) return;

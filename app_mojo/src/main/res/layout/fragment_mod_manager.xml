@@ -16,28 +16,52 @@
         android:paddingVertical="@dimen/padding_medium"
         android:layout_marginTop="@dimen/fragment_padding_medium"
         android:layout_marginHorizontal="@dimen/fragment_padding_medium"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:layout_constraintTop_toTopOf="parent"
+        <TextView
+            android:id="@+id/mod_manager_title_textview"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="My Fabric instance" />
 
+        <TextView
+            android:id="@+id/mod_manager_summary_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mod_manager_title_textview"
+            tools:text="Fabric · Minecraft 1.21.1 · 12 mods, 2 disabled" />
 
-        >
-        <!-- Search text -->
         <EditText
             android:id="@+id/search_mod_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
             android:background="@drawable/background_line"
             android:textSize="@dimen/_13ssp"
             android:translationZ="2dp"
-
             android:ems="10"
-            android:hint="@string/hint_search_modpack"
-            android:inputType="textPersonName"
+            android:hint="@string/mod_manager_search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:paddingHorizontal="@dimen/padding_heavy"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mod_manager_summary_textview"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ProgressBar
             android:id="@+id/search_mod_progressbar"
@@ -46,24 +70,57 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/search_mod_edittext"
-            tools:layout_editor_absoluteX="13dp" />
+            app:layout_constraintTop_toBottomOf="@+id/search_mod_edittext" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:clipToPadding="false"
+        android:id="@+id/mod_manager_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/mod_manager_recyclerview"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/fragment_padding_medium"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/mod_manager_import_button"/>
+        app:layout_constraintBottom_toTopOf="@id/mod_manager_button_bar" />
 
-    <com.kdt.mcgui.MineButton
-        android:id="@+id/mod_manager_import_button"
+    <TextView
+        android:id="@+id/mod_manager_empty_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/padding_extra_large"
+        android:gravity="center"
+        android:text="@string/mod_manager_empty"
+        android:textColor="@color/secondary_text"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/mod_manager_button_bar" />
+
+    <LinearLayout
+        android:id="@+id/mod_manager_button_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_moderate"
-        android:layout_marginHorizontal="@dimen/padding_moderate"
-        android:text="IMPORT"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/padding_moderate"
+        android:paddingBottom="@dimen/padding_moderate"
+        android:paddingTop="@dimen/padding_medium"
+        android:background="@color/background_app"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/mod_manager_import_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/padding_moderate"
+            android:text="@string/mod_manager_import_mod" />
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/mod_manager_browse_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/mod_manager_browse" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

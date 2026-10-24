@@ -15,4 +15,6 @@
     <color name="primary_text">#FFFFFF</color>
     <color name="secondary_text">#B2B2B2</color>
 
+    <color name="mod_manager_delete_text">#FF7A7A</color>
+
 </resources>

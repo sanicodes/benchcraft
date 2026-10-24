@@ -519,6 +519,45 @@
     <string name="mod_manager_mod_corrupt_not_a_mod">This file isn\'t a mod or isn\'t compatible with this mod loader</string>
     <string name="mod_manager_mod_unknown_description">No description</string>
     <string name="mod_manager_mod_unknown_version">Unknown version</string>
+    <string name="mod_manager_browse">Browse Modrinth</string>
+    <string name="mod_manager_search_hint">Search installed mods</string>
+    <string name="mod_manager_empty">No mods installed yet. Tap \"Browse Modrinth\" to find some.</string>
+    <string name="mod_manager_summary">%1$s · Minecraft %2$s · %3$s</string>
+    <string name="mod_manager_unknown_mc_version">unknown version</string>
+    <plurals name="mod_manager_mod_count">
+        <item quantity="one">%d mod</item>
+        <item quantity="other">%d mods</item>
+    </plurals>
+    <string name="mod_manager_disabled_count">%1$s, %2$d disabled</string>
+    <string name="mod_manager_delete_title">Delete %1$s?</string>
+    <string name="mod_manager_delete_message">This removes the file from the instance\'s mods folder.</string>
+    <string name="mod_manager_no_loader">This instance has no mod loader</string>
+    <string name="mod_manager_toggle_failed">Couldn\'t enable or disable this mod</string>
+    <string name="mod_browser_search_hint">Search Modrinth</string>
+    <string name="mod_browser_filter">%1$s mods for Minecraft %2$s</string>
+    <string name="mod_browser_filter_any_version">%1$s mods (Minecraft version unknown, showing all)</string>
+    <string name="mod_browser_meta">by %1$s · %2$s downloads</string>
+    <string name="mod_browser_installed">Installed</string>
+    <string name="mod_browser_no_results">No mods found</string>
+    <string name="mod_browser_error">Couldn\'t reach Modrinth. Check your internet connection.</string>
+    <string name="mod_browser_no_versions">This mod has no version for %1$s on Minecraft %2$s</string>
+    <string name="mod_browser_install">Install</string>
+    <string name="mod_browser_version_installed">%1$s (installed)</string>
+    <string name="mod_browser_resolving_dependencies">Checking required mods…</string>
+    <string name="mod_browser_install_done">Installed %1$s</string>
+    <plurals name="mod_browser_install_done_with_dependencies">
+        <item quantity="one">Installed %1$s and %2$d required mod</item>
+        <item quantity="other">Installed %1$s and %2$d required mods</item>
+    </plurals>
+    <string name="mod_browser_missing_dependencies">Installed %1$s, but these required mods couldn\'t be found for this version: %2$s</string>
+    <string name="mod_browser_install_failed">Failed to install the mod</string>
+    <string-array name="mod_browser_sort_names">
+        <item>Relevance</item>
+        <item>Downloads</item>
+        <item>Follows</item>
+        <item>Newest</item>
+        <item>Updated</item>
+    </string-array>
     <string name="loading_screen_booted">Ready - running on %1$s!</string>
     <string name="loading_screen_warning">If you are stuck here, the game might have crashed</string>
     <string name="preference_metadata_clear">Clear metadata cache</string>

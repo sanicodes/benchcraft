@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/padding_medium"
+    android:background="@drawable/background_line"
+    android:paddingHorizontal="@dimen/padding_moderate">
+
+    <ImageView
+        android:id="@+id/mod_thumbnail_imageview"
+        android:layout_width="@dimen/_44sdp"
+        android:layout_height="@dimen/_44sdp"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/mod_title_textview"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_moderate"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintStart_toEndOf="@+id/mod_thumbnail_imageview"
+        app:layout_constraintEnd_toStartOf="@+id/mod_browser_installed_badge"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sodium" />
+
+    <TextView
+        android:id="@+id/mod_browser_installed_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_line_selected"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_tiny"
+        android:text="@string/mod_browser_installed"
+        android:textAllCaps="true"
+        android:textColor="@color/minebutton_color"
+        android:textSize="@dimen/_8ssp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mod_title_textview"
+        app:layout_constraintBottom_toBottomOf="@id/mod_title_textview"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/mod_browser_meta_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_9ssp"
+        app:layout_constraintStart_toStartOf="@+id/mod_title_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mod_title_textview"
+        tools:text="by jellysquid3 · 25.3M downloads" />
+
+    <TextView
+        android:id="@+id/mod_body_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintStart_toStartOf="@+id/mod_title_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mod_browser_meta_textview"
+        tools:text="The fastest and most compatible rendering optimization mod for Minecraft." />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

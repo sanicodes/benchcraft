@@ -35,6 +35,11 @@ public class ApiHandler {
         additionalHeaders.put("x-api-key", apiKey);
     }
 
+    public ApiHandler(String url, Map<String, String> headers) {
+        baseUrl = url;
+        additionalHeaders = headers;
+    }
+
     public <T> T get(String endpoint, Class<T> tClass) {
         return getFullUrl(additionalHeaders, baseUrl + "/" + endpoint, tClass);
     }
