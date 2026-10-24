@@ -42,6 +42,9 @@ def getCFApiKey = {
     return "DUMMY"
 }
 
+// Package ID of Benchcraft builds, so they can be installed next to the official MojoLauncher
+def benchcraftApplicationId = "io.github.sanicodes.benchcraft"
+
 configurations {
     instrumentedClasspath {
         canBeConsumed = false
@@ -144,6 +147,15 @@ android {
             signingConfig signingConfigs.publicBuild
             matchingFallbacks += List.of("release")
         }
+        // Release build with its own package ID (set in androidComponents below). Signed with the
+        // repo's debug key, which is public, so it's meant for personal installs
+        benchcraft {
+            initWith release
+            signingConfig signingConfigs.customDebug
+            matchingFallbacks += List.of("release")
+            resValue 'string', 'storageProviderAuthorities', "${benchcraftApplicationId}.scoped.gamefolder"
+            resValue 'string', 'application_package', benchcraftApplicationId
+        }
     }
 
     ndkVersion "29.0.14206865"
@@ -174,6 +186,13 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+}
+
+androidComponents {
+    // Build types can only add a suffix to the package ID, so replace it here instead
+    onVariants(selector().withBuildType("benchcraft")) { variant ->
+        variant.applicationId.set(benchcraftApplicationId)
     }
 }
 
