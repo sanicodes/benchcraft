@@ -1,6 +1,6 @@
 <H1 align="center">Benchcraft</H1>
 
-<img src="./app_mojo/src/main/ic_launcher-playstore.png" align="left" width="150" height="150" alt="Benchcraft logo">
+<img src="./app_benchcraft/src/main/ic_launcher-playstore.png" align="left" width="150" height="150" alt="Benchcraft logo">
 
 * Benchcraft is a launcher that lets you play Minecraft: Java Edition on your Android device.
 
@@ -40,20 +40,20 @@ Clone with submodules, then build. Gradle downloads the other components it need
 ```
 git clone --recursive https://github.com/sanicodes/benchcraft.git
 cd benchcraft
-./gradlew :app_mojo:assembleFullDebug
+./gradlew :app_benchcraft:assembleFullDebug
 ```
 
 To build a release APK instead:
 ```
-./gradlew :app_mojo:assembleFullBenchcraft
+./gradlew :app_benchcraft:assembleFullBenchcraft
 ```
-The APK ends up in `app_mojo/build/outputs/apk/full/benchcraft/`. It's signed with the debug key that's checked into the repo. That key is public, so this build is meant for personal installs, not for distribution.
+The APK ends up in `app_benchcraft/build/outputs/apk/full/benchcraft/`. It's signed with the debug key that's checked into the repo. That key is public, so this build is meant for personal installs, not for distribution.
 
 Build one variant per Gradle run. Building two at once (for example debug and release) fails, because they share their download folders.
 
 If you are building on Windows:
 * Replace `./gradlew` with `.\gradlew.bat`
-* Make sure `mojoexec`, `sdl` and `glfw` are symlinked into `app_mojo/src/main/jni/`
+* Make sure `mojoexec`, `sdl` and `glfw` are symlinked into `app_benchcraft/src/main/jni/`
 
 ## Relationship to MojoLauncher
 Benchcraft branched off from MojoLauncher. The game runtime, renderers and most of the launcher are MojoLauncher's work, and Benchcraft regularly merges in their changes. The internal code (the `git.artdeell.mojo` Java package, native libraries and plugin IDs) keeps MojoLauncher's names so those merges stay easy.

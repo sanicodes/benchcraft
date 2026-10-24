@@ -19,7 +19,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name='MojoLauncher'
-include ':app_mojo'
+include ':app_benchcraft'
 
 include ':forge_installer'
 include ':NoBlocklist'

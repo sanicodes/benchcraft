@@ -27,7 +27,7 @@ jobs:
           workflow: android.yml
           workflow_conclusion: success
           name: output-aar
-          path: app_mojo/libs
+          path: app_benchcraft/libs
 
       - name: Get Mesa
         uses: dawidd6/action-download-artifact@v6  
@@ -39,7 +39,7 @@ jobs:
           workflow_conclusion: success
           branch: mojo/26.2
           name: mesa-aar
-          path: app_mojo/libs
+          path: app_benchcraft/libs
 
       - uses: gradle/actions/setup-gradle@v4
         with:
@@ -55,24 +55,24 @@ jobs:
       - name: Build Publishing .aab
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
-          gradle :app_mojo:bundleFullGplay
-          mv app_mojo/build/outputs/bundle/fullGplay/app_mojo-full-gplay.aab out/app-gplay.aab
+          gradle :app_benchcraft:bundleFullGplay
+          mv app_benchcraft/build/outputs/bundle/fullGplay/app_benchcraft-full-gplay.aab out/app-gplay.aab
 
       - name: Build Debug .apk
         run: |
           # Build the launcher
-          gradle :app_mojo:assembleFullDebug
-          mv app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk out/app-debug-full.apk
+          gradle :app_benchcraft:assembleFullDebug
+          mv app_benchcraft/build/outputs/apk/full/debug/app_benchcraft-full-debug.apk out/app-debug-full.apk
 
       - name: Build Debug .apk (No runtime)
         run: |
-          gradle :app_mojo:assembleNoruntimeDebug
-          mv app_mojo/build/outputs/apk/noruntime/debug/app_mojo-noruntime-debug.apk out/app-debug-noruntime.apk
+          gradle :app_benchcraft:assembleNoruntimeDebug
+          mv app_benchcraft/build/outputs/apk/noruntime/debug/app_benchcraft-noruntime-debug.apk out/app-debug-noruntime.apk
       - name: Build Nightly Release .apk
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
-          gradle :app_mojo:assembleFullPubRelease
-          mv app_mojo/build/outputs/apk/full/pubRelease/app_mojo-full-pubRelease.apk out/MojoLauncher-release.apk
+          gradle :app_benchcraft:assembleFullPubRelease
+          mv app_benchcraft/build/outputs/apk/full/pubRelease/app_benchcraft-full-pubRelease.apk out/MojoLauncher-release.apk
       - name: Gen md5sums
         run: |
           md5sum out/app-debug-full.apk > out/app-debug-full.md5

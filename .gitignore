@@ -1,12 +1,12 @@
 /.gradle
 /build
 /*/build
-app_mojo/src/main/assets/components/jre
-/app_mojo/src/main/assets/components/jre-new/
-/app_mojo/src/main/assets/components/jre-21/
+app_benchcraft/src/main/assets/components/jre
+/app_benchcraft/src/main/assets/components/jre-new/
+/app_benchcraft/src/main/assets/components/jre-21/
 local.properties
 .idea/
-app_mojo/.cxx/
+app_benchcraft/.cxx/
 .vs/
 /curseforge_key.txt
-/app_mojo/libs/ltw-release.aar
+/app_benchcraft/libs/ltw-release.aar
