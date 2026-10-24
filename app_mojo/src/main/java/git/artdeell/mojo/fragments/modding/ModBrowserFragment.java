@@ -32,6 +32,7 @@ import git.artdeell.mojo.R;
 import git.artdeell.mojo.Tools;
 import git.artdeell.mojo.instances.Instance;
 import git.artdeell.mojo.instances.Instances;
+import git.artdeell.mojo.modding.modmanager.ContentType;
 import git.artdeell.mojo.modding.modmanager.InstalledModIndex;
 import git.artdeell.mojo.modding.modmanager.ModBrowserAdapter;
 import git.artdeell.mojo.modding.modmanager.ModTarget;
@@ -43,6 +44,8 @@ import git.artdeell.mojo.progresskeeper.ProgressKeeper;
 
 public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Callback {
     public static final String TAG = "ModBrowserFragment";
+    public static final String ARG_CONTENT_TYPE = "content_type";
+    public static final String ARG_QUERY = "query";
     private static final String[] SORT_INDICES = {
             ModrinthModApi.SORT_RELEVANCE,
             ModrinthModApi.SORT_DOWNLOADS,
@@ -59,6 +62,7 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
     private TextView mFilterTextView;
     private TextView mStatusTextView;
     private ModTarget mModTarget;
+    private ContentType mContentType = ContentType.MODS;
     private Future<InstalledModIndex> mInstalledModIndex;
     private String mQuery = "";
     private String mSortIndex = ModrinthModApi.SORT_RELEVANCE;
@@ -69,6 +73,17 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
 
     public ModBrowserFragment() {
         super(R.layout.fragment_mod_browser);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if(args == null) return;
+        String typeName = args.getString(ARG_CONTENT_TYPE);
+        if(typeName != null) mContentType = ContentType.valueOf(typeName);
+        String query = args.getString(ARG_QUERY);
+        if(query != null) mQuery = query;
     }
 
     @Override
@@ -107,6 +122,7 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        mSearchEditText.setText(mQuery);
         mSearchEditText.setOnEditorActionListener((v, actionId, event) -> {
             mQuery = mSearchEditText.getText().toString().trim();
             startSearch();
@@ -120,7 +136,7 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
             Tools.runOnUiThread(() -> {
                 if(getView() == null) return;
                 setLoading(false);
-                if(modTarget == null) {
+                if(!modTarget.supports(mContentType)) {
                     showStatus(R.string.mod_manager_no_loader);
                     return;
                 }
@@ -131,19 +147,31 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
 
     private void onTargetReady(ModTarget modTarget) {
         mModTarget = modTarget;
-        if(modTarget.mcVersion != null) {
-            mFilterTextView.setText(getString(R.string.mod_browser_filter, modTarget.getLoaderName(), modTarget.mcVersion));
-        } else {
-            mFilterTextView.setText(getString(R.string.mod_browser_filter_any_version, modTarget.getLoaderName()));
-        }
+        mFilterTextView.setText(getFilterText(modTarget));
         startSearch();
+        ContentType type = mContentType;
         mInstalledModIndex = MojoApplication.sExecutorService.submit(() -> {
-            InstalledModIndex index = InstalledModIndex.build(mApi, modTarget.modsDirectory);
+            InstalledModIndex index = InstalledModIndex.build(mApi, modTarget.getDirectory(type), type);
             Tools.runOnUiThread(() -> {
                 if(mAdapter != null) mAdapter.setInstalledModIndex(index);
             });
             return index;
         });
+    }
+
+    private String getFilterText(ModTarget modTarget) {
+        String mcVersion = modTarget.mcVersion;
+        switch (mContentType) {
+            case RESOURCE_PACKS:
+                return mcVersion != null ? getString(R.string.mod_browser_filter_resource_packs, mcVersion)
+                        : getString(R.string.mod_browser_filter_resource_packs_any_version);
+            case SHADERS:
+                return mcVersion != null ? getString(R.string.mod_browser_filter_shaders, mcVersion)
+                        : getString(R.string.mod_browser_filter_shaders_any_version);
+            default:
+                return mcVersion != null ? getString(R.string.mod_browser_filter, modTarget.getLoaderName(), mcVersion)
+                        : getString(R.string.mod_browser_filter_any_version, modTarget.getLoaderName());
+        }
     }
 
     private void startSearch() {
@@ -159,10 +187,11 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
         mLoadingPage = true;
         setLoading(true);
         ModTarget modTarget = mModTarget;
+        ContentType type = mContentType;
         String query = mQuery;
         String sortIndex = mSortIndex;
         MojoApplication.sExecutorService.execute(() -> {
-            ModrinthModApi.SearchPage page = mApi.search(query, modTarget, sortIndex, offset);
+            ModrinthModApi.SearchPage page = mApi.search(query, modTarget, type, sortIndex, offset);
             Tools.runOnUiThread(() -> {
                 if(getView() == null) return;
                 setLoading(false);
@@ -200,10 +229,11 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
     public void onModClicked(ModrinthProject project) {
         if(mModTarget == null) return;
         ModTarget modTarget = mModTarget;
+        ContentType type = mContentType;
         Future<InstalledModIndex> indexFuture = mInstalledModIndex;
         setLoading(true);
         MojoApplication.sExecutorService.execute(() -> {
-            ModrinthVersion[] versions = mApi.getVersions(project.project_id, modTarget);
+            ModrinthVersion[] versions = mApi.getVersions(project.project_id, modTarget, type);
             InstalledModIndex index = waitForIndex(indexFuture);
             Tools.runOnUiThread(() -> {
                 if(getView() == null) return;
@@ -213,7 +243,10 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
                     Toast.makeText(context, R.string.mod_browser_error, Toast.LENGTH_SHORT).show();
                 } else if(versions.length == 0) {
                     String mcVersion = modTarget.mcVersion != null ? modTarget.mcVersion : getString(R.string.mod_manager_unknown_mc_version);
-                    Toast.makeText(context, getString(R.string.mod_browser_no_versions, modTarget.getLoaderName(), mcVersion), Toast.LENGTH_LONG).show();
+                    String message = type == ContentType.MODS
+                            ? getString(R.string.mod_browser_no_versions, modTarget.getLoaderName(), mcVersion)
+                            : getString(R.string.mod_browser_no_versions_pack, mcVersion);
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                 } else {
                     showVersionDialog(context, project, versions, index);
                 }
@@ -250,9 +283,10 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
         }
         ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.mod_browser_resolving_dependencies);
         ModTarget modTarget = mModTarget;
+        ContentType type = mContentType;
         MojoApplication.sExecutorService.execute(() -> {
             try {
-                ModrinthModInstaller.Result result = ModrinthModInstaller.install(mApi, modTarget, version, index);
+                ModrinthModInstaller.Result result = ModrinthModInstaller.install(mApi, modTarget, type, version, index);
                 Tools.runOnUiThread(() -> {
                     Toast.makeText(appContext, getResultMessage(appContext, project, result), Toast.LENGTH_LONG).show();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
@@ -265,6 +299,13 @@ public class ModBrowserFragment extends Fragment implements ModBrowserAdapter.Ca
     }
 
     private static String getResultMessage(Context context, ModrinthProject project, ModrinthModInstaller.Result result) {
+        String message = getInstallMessage(context, project, result);
+        if(result.enabledDependencies == 0) return message;
+        return message + "\n" + context.getResources().getQuantityString(R.plurals.mod_browser_enabled_dependencies,
+                result.enabledDependencies, result.enabledDependencies);
+    }
+
+    private static String getInstallMessage(Context context, ModrinthProject project, ModrinthModInstaller.Result result) {
         if(!result.missingDependencies.isEmpty()) {
             return context.getString(R.string.mod_browser_missing_dependencies, project.title,
                     TextUtils.join(", ", result.missingDependencies));

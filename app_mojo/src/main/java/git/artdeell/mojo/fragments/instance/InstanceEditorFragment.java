@@ -35,7 +35,6 @@ import git.artdeell.mojo.multirt.MultiRTUtils;
 import git.artdeell.mojo.multirt.RTSpinnerAdapter;
 import git.artdeell.mojo.multirt.Runtime;
 import git.artdeell.mojo.instances.InstanceIconProvider;
-import git.artdeell.mojo.modding.modmanager.ModTarget;
 import git.artdeell.mojo.utils.profiles.VersionSelectorDialog;
 import git.artdeell.mojo.utils.CropperUtils;
 
@@ -166,9 +165,6 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
             mVersionLabel.setVisibility(View.GONE);
             mSharedDataCheckbox.setVisibility(View.GONE);
             mSharedDataLabel.setVisibility(View.GONE);
-        }
-        if(ModTarget.detectPlatform(instance) != null) {
-            mManageModsButton.setVisibility(View.VISIBLE);
         }
 
         // Runtime spinner

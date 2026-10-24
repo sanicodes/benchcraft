@@ -27,6 +27,18 @@ public abstract class ModInfo {
         return name.endsWith(DISABLED_SUFFIX);
     }
 
+    public static String removeDisabledSuffix(String name) {
+        if(!isDisabledFileName(name)) return name;
+        return name.substring(0, name.length() - DISABLED_SUFFIX.length());
+    }
+
+    /**
+     * Folders can't be turned off by renaming, since the game loads them whatever they are called.
+     */
+    public boolean canToggle() {
+        return true;
+    }
+
     public boolean isEnabled() {
         return !isDisabledFileName(jarFile.getName());
     }
@@ -49,9 +61,7 @@ public abstract class ModInfo {
     }
 
     public String getDisplayFileName() {
-        String name = jarFile.getName();
-        if(name.endsWith(DISABLED_SUFFIX)) return name.substring(0, name.length() - DISABLED_SUFFIX.length());
-        return name;
+        return removeDisabledSuffix(jarFile.getName());
     }
 
     protected void onFileMoved(File newFile) throws IOException {}

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,12 +32,15 @@ import git.artdeell.mojo.Tools;
 import git.artdeell.mojo.modding.modpacks.SelfReferencingFuture;
 import git.artdeell.mojo.utils.FilteredSubList;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -50,11 +55,11 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
     private final ExecutorService mIconLoadingService = Executors.newFixedThreadPool(2);
     private final List<ModInfo> mModInfos;
     private final FilteredSubList<ModInfo> mDisplayModInfos;
-    private final Platform mPlatform;
+    @Nullable private final Platform mPlatform;
     private final ModListListener mListener;
     private FilteredSubList.BasicPredicate<ModInfo> mSearchPredicate = i -> true;
 
-    public ModAdapter(List<ModInfo> modInfos, Platform mPlatform, ModListListener listener)  {
+    public ModAdapter(List<ModInfo> modInfos, @Nullable Platform mPlatform, ModListListener listener)  {
         this.mModInfos = modInfos;
         this.mPlatform = mPlatform;
         this.mListener = listener;
@@ -157,6 +162,8 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
             if(mIconLoadingFuture != null) mIconLoadingFuture.cancel(true);
             if(modInfo instanceof ContainedModInfo) bindContained((ContainedModInfo) modInfo);
             else if(modInfo instanceof CorruptModInfo) bindCorrupt((CorruptModInfo) modInfo);
+            else if(modInfo instanceof PackInfo) bindPack((PackInfo) modInfo);
+            mEnableSwitch.setVisibility(modInfo.canToggle() ? View.VISIBLE : View.GONE);
             mEnableSwitch.setOnCheckedChangeListener(null);
             mEnableSwitch.setChecked(modInfo.isEnabled());
             mEnableSwitch.setOnCheckedChangeListener((v, checked) -> toggleMod(modInfo, checked));
@@ -212,11 +219,19 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
         }
 
         private void applyThumbnail(final ModFile modFile) {
+            applyThumbnail(() -> {
+                try(InputStream inputStream = modFile.getIconStream()) {
+                    return inputStream != null ? BitmapFactory.decodeStream(inputStream) : null;
+                }
+            });
+        }
+
+        private void applyThumbnail(Callable<Bitmap> iconLoader) {
             mIconLoadingFuture = new SelfReferencingFuture(f->{
                 Bitmap iconBitmap = null;
-                try(InputStream inputStream = modFile.getIconStream()) {
-                    if(inputStream != null) iconBitmap = BitmapFactory.decodeStream(inputStream);
-                }catch (IOException e) {
+                try {
+                    iconBitmap = iconLoader.call();
+                }catch (Exception e) {
                     Log.w("ModAdapter", "Failed to load icon", e);
                 }
                 Bitmap finalIcon = iconBitmap;
@@ -241,6 +256,18 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
             if(version == null) mVersion.setText(R.string.mod_manager_mod_unknown_version);
             else mVersion.setText(version.toString());
             applyThumbnail(containedModInfo.modFile);
+        }
+
+        private void bindPack(PackInfo packInfo) {
+            mName.setTextColor(mDefaultNameColor);
+            mDescription.setTextColor(mDefaultDescriptionColor);
+            mName.setText(packInfo.getName());
+            if(packInfo.description != null) mDescription.setText(packInfo.description);
+            else if(packInfo.type == ContentType.SHADERS) mDescription.setText(R.string.mod_manager_shader_pack);
+            else mDescription.setText(R.string.mod_manager_resource_pack);
+            if(packInfo.isDirectory) mVersion.setText(R.string.mod_manager_pack_folder);
+            else mVersion.setText(Formatter.formatShortFileSize(itemView.getContext(), packInfo.size));
+            applyThumbnail(packInfo::loadIcon);
         }
 
         private void bindCorrupt(CorruptModInfo corruptModInfo) {
@@ -288,14 +315,23 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ViewHolder> {
         }
 
         private void confirmDelete(Context context, ModInfo modInfo) {
+            String folderName = modInfo.jarFile.getParentFile() != null ? modInfo.jarFile.getParentFile().getName() : "";
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.mod_manager_delete_title, modInfo.getDisplayFileName()))
-                    .setMessage(R.string.mod_manager_delete_message)
-                    .setPositiveButton(R.string.global_delete, (d, w) -> {
-                        if(modInfo.jarFile.delete() || !modInfo.jarFile.exists()) removeMod(modInfo);
-                    })
+                    .setMessage(context.getString(R.string.mod_manager_delete_message, folderName))
+                    .setPositiveButton(R.string.global_delete, (d, w) -> deleteMod(modInfo))
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
+        }
+
+        private void deleteMod(ModInfo modInfo) {
+            MojoApplication.sExecutorService.execute(() -> {
+                FileUtils.deleteQuietly(modInfo.jarFile);
+                boolean deleted = !modInfo.jarFile.exists();
+                Tools.runOnUiThread(() -> {
+                    if(deleted) removeMod(modInfo);
+                });
+            });
         }
     }
 

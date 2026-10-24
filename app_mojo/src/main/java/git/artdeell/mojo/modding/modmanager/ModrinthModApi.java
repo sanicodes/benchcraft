@@ -18,7 +18,7 @@ import git.artdeell.mojo.modding.modpacks.api.ApiHandler;
 import git.artdeell.mojo.utils.DownloadUtils;
 
 /**
- * Modrinth API calls for single mods. Modpacks are handled by ModrinthApi.
+ * Modrinth API calls for single mods, resource packs and shaders. Modpacks are handled by ModrinthApi.
  */
 public class ModrinthModApi {
     public static final int PAGE_SIZE = 30;
@@ -38,12 +38,14 @@ public class ModrinthModApi {
     }
 
     @Nullable
-    public SearchPage search(String query, ModTarget target, String sortIndex, int offset) {
+    public SearchPage search(String query, ModTarget target, ContentType type, String sortIndex, int offset) {
         JsonArray facets = new JsonArray();
-        facets.add(toJsonArray("project_type:mod"));
-        JsonArray loaderFacet = new JsonArray();
-        for(String loader : target.getModrinthLoaders()) loaderFacet.add("categories:" + loader);
-        facets.add(loaderFacet);
+        facets.add(toJsonArray("project_type:" + type.modrinthProjectType));
+        if(type != ContentType.RESOURCE_PACKS) {
+            JsonArray loaderFacet = new JsonArray();
+            for(String loader : target.getModrinthLoaders(type)) loaderFacet.add("categories:" + loader);
+            facets.add(loaderFacet);
+        }
         if(target.mcVersion != null) facets.add(toJsonArray("versions:" + target.mcVersion));
 
         HashMap<String, Object> params = new HashMap<>();
@@ -59,9 +61,9 @@ public class ModrinthModApi {
      * @return versions of the project that work with the target, newest first
      */
     @Nullable
-    public ModrinthVersion[] getVersions(String projectId, ModTarget target) {
+    public ModrinthVersion[] getVersions(String projectId, ModTarget target, ContentType type) {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("loaders", toJsonArray(target.getModrinthLoaders()).toString());
+        params.put("loaders", toJsonArray(target.getModrinthLoaders(type)).toString());
         if(target.mcVersion != null) params.put("game_versions", toJsonArray(target.mcVersion).toString());
         return mApiHandler.get("project/" + projectId + "/version", params, ModrinthVersion[].class);
     }

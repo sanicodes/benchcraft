@@ -6,6 +6,7 @@ import static git.artdeell.mojo.Tools.shareLog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -38,17 +39,18 @@ import git.artdeell.mojo.game.renderer.GameRenderer;
 import git.artdeell.mojo.game.renderer.RenderSpec;
 import git.artdeell.mojo.instances.Instance;
 import git.artdeell.mojo.instances.Instances;
-import git.artdeell.mojo.modding.modmanager.ModInfo;
+import git.artdeell.mojo.modding.modmanager.ContentType;
 import git.artdeell.mojo.modding.modmanager.ModTarget;
 import git.artdeell.mojo.utils.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.EnumMap;
 
 import me.andreasmelone.basicmodinfoparser.platform.Platform;
 
 public class MainMenuFragment extends Fragment {
     public static final String TAG = "MainMenuFragment";
-    private static final float UNAVAILABLE_TILE_ALPHA = 0.5f;
 
     private mcVersionSpinner mVersionSpinner;
     private TextView mInstanceDetails, mInstanceRenderer;
@@ -135,17 +137,21 @@ public class MainMenuFragment extends Fragment {
         mInstanceRenderer.setText(getString(R.string.dashboard_renderer, getRendererName(summary.renderer)));
         setTileSubtitle(mControlsTile, getString(R.string.dashboard_controls_layout, summary.controlLayout));
 
-        String modsText;
-        if(summary.platform == null) {
-            modsText = getString(R.string.dashboard_mods_no_loader);
-        }else if(summary.modCount == 0) {
-            modsText = getString(R.string.dashboard_mods_empty);
-        }else {
-            modsText = getResources().getQuantityString(R.plurals.mod_manager_mod_count, summary.modCount, summary.modCount);
-            if(summary.disabledModCount > 0) modsText = getString(R.string.mod_manager_disabled_count, modsText, summary.disabledModCount);
-        }
-        setTileSubtitle(mModsTile, modsText);
-        mModsTile.setAlpha(summary.platform == null ? UNAVAILABLE_TILE_ALPHA : 1f);
+        setTileSubtitle(mModsTile, getContentSummary(summary));
+    }
+
+    private String getContentSummary(InstanceSummary summary) {
+        ArrayList<String> parts = new ArrayList<>(3);
+        addCount(parts, R.plurals.dashboard_mod_count, summary.contentCounts.get(ContentType.MODS));
+        addCount(parts, R.plurals.dashboard_resource_pack_count, summary.contentCounts.get(ContentType.RESOURCE_PACKS));
+        addCount(parts, R.plurals.dashboard_shader_count, summary.contentCounts.get(ContentType.SHADERS));
+        if(parts.isEmpty()) return getString(R.string.dashboard_mods_empty);
+        return TextUtils.join(" · ", parts);
+    }
+
+    private void addCount(ArrayList<String> parts, int pluralsRes, @Nullable Integer count) {
+        if(count == null || count == 0) return;
+        parts.add(getResources().getQuantityString(pluralsRes, count, count));
     }
 
     private String getVersionName(@Nullable String version) {
@@ -167,10 +173,6 @@ public class MainMenuFragment extends Fragment {
         Instance instance = Instances.loadSelectedInstance();
         if(instance == null) {
             Toast.makeText(context, R.string.no_instance, Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(ModTarget.detectPlatform(instance) == null) {
-            Toast.makeText(context, R.string.main_manage_mods_no_loader, Toast.LENGTH_LONG).show();
             return;
         }
         Tools.swapFragment(requireActivity(), ModManagerFragment.class, ModManagerFragment.TAG, null);
@@ -206,25 +208,23 @@ public class MainMenuFragment extends Fragment {
         @Nullable String mcVersion;
         String renderer;
         String controlLayout;
-        int modCount;
-        int disabledModCount;
+        final EnumMap<ContentType, Integer> contentCounts = new EnumMap<>(ContentType.class);
 
         @Nullable
         static InstanceSummary load() {
             Instance instance = Instances.loadSelectedInstance();
             if(instance == null) return null;
             InstanceSummary summary = new InstanceSummary();
-            summary.platform = ModTarget.detectPlatform(instance);
-            summary.mcVersion = ModTarget.detectMinecraftVersion(instance.versionId);
+            ModTarget modTarget = ModTarget.fromInstance(instance);
+            summary.platform = modTarget.platform;
+            summary.mcVersion = modTarget.mcVersion;
             if(summary.mcVersion == null) summary.mcVersion = instance.versionId;
             summary.renderer = instance.getLaunchRenderer();
             summary.controlLayout = FileUtils.removeExtension(new File(instance.getLaunchControls()).getName());
-            if(summary.platform == null) return summary;
-            File[] mods = new File(instance.getGameDirectory(), "mods").listFiles((dir, name) -> ModInfo.isModFileName(name));
-            if(mods == null) return summary;
-            for(File mod : mods) {
-                summary.modCount++;
-                if(ModInfo.isDisabledFileName(mod.getName())) summary.disabledModCount++;
+            for(ContentType type : ContentType.values()) {
+                if(!modTarget.supports(type)) continue;
+                File[] files = modTarget.getDirectory(type).listFiles(type::isContentFile);
+                summary.contentCounts.put(type, files != null ? files.length : 0);
             }
             return summary;
         }

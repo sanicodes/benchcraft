@@ -43,6 +43,14 @@ public class ModScanner {
         return modInfos;
     }
 
+    public static List<ModInfo> findPacks(File directory, ContentType type) {
+        ArrayList<ModInfo> packs = new ArrayList<>();
+        File[] files = directory.listFiles(type::isContentFile);
+        if(files == null) return packs;
+        for(File file : files) packs.add(PackInfo.read(file, type));
+        return packs;
+    }
+
     private void findModFiles(File directory) throws InterruptedException{
         File[] files = directory.listFiles(((file,name) -> ModInfo.isModFileName(name)));
         File[] directories = directory.listFiles(File::isDirectory);

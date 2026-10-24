@@ -512,7 +512,7 @@
     <string name="preference_show_memory_warning_summary">If enabled, displays the warning dialog that is shown during game launch if the amount of free memory is less than allocated to the game</string>
     <string name="option_do_not_show_again">Don\'t show again</string>
     <string name="loading_screen_title">Waiting for a game window to appear…</string>
-    <string name="vprof_editor_manage_mods">Manage mods</string>
+    <string name="vprof_editor_manage_mods">Mods &amp; packs</string>
     <string name="mod_manager_import_mod">Import</string>
     <string name="mod_manager_mod_corrupt">Corrupt mod</string>
     <string name="mod_manager_mod_corrupt_cant_read">This file cannot be read</string>
@@ -521,18 +521,41 @@
     <string name="mod_manager_mod_unknown_version">Unknown version</string>
     <string name="mod_manager_browse">Browse Modrinth</string>
     <string name="mod_manager_search_hint">Search installed mods</string>
+    <string name="mod_manager_search_hint_resource_packs">Search resource packs</string>
+    <string name="mod_manager_search_hint_shaders">Search shaders</string>
     <string name="mod_manager_empty">No mods installed yet. Tap \"Browse Modrinth\" to find some.</string>
+    <string name="mod_manager_empty_resource_packs">No resource packs yet. Tap \"Browse Modrinth\" to find some.</string>
+    <string name="mod_manager_empty_shaders">No shaders yet. Tap \"Browse Modrinth\" to find some.</string>
+    <string name="mod_manager_no_matches">Nothing matches your search</string>
+    <string name="content_type_mods">Mods</string>
+    <string name="content_type_resource_packs">Resource packs</string>
+    <string name="content_type_shaders">Shaders</string>
+    <string name="mod_manager_pack_folder">Folder</string>
+    <string name="mod_manager_resource_pack">Resource pack</string>
+    <string name="mod_manager_shader_pack">Shader pack</string>
+    <string name="mod_manager_hint_resource_packs">Turn packs on in-game under Options › Resource Packs.</string>
+    <string name="mod_manager_hint_shaders">Pick one in-game under Options › Video Settings › Shader Packs. Shaders can be slow on phones.</string>
+    <string name="mod_manager_hint_shaders_no_loader">Shaders need %1$s, a mod that loads them.</string>
+    <string name="mod_manager_get_shader_mod">Get %1$s</string>
     <string name="mod_manager_summary">%1$s · Minecraft %2$s · %3$s</string>
     <string name="mod_manager_unknown_mc_version">unknown version</string>
     <plurals name="mod_manager_mod_count">
         <item quantity="one">%d mod</item>
         <item quantity="other">%d mods</item>
     </plurals>
+    <plurals name="mod_manager_resource_pack_count">
+        <item quantity="one">%d resource pack</item>
+        <item quantity="other">%d resource packs</item>
+    </plurals>
+    <plurals name="mod_manager_shader_count">
+        <item quantity="one">%d shader</item>
+        <item quantity="other">%d shaders</item>
+    </plurals>
     <string name="mod_manager_disabled_count">%1$s, %2$d disabled</string>
     <string name="mod_manager_delete_title">Delete %1$s?</string>
-    <string name="mod_manager_delete_message">This removes the file from the instance\'s mods folder.</string>
+    <string name="mod_manager_delete_message">This deletes it from the instance\'s %1$s folder.</string>
     <string name="mod_manager_no_loader">This instance has no mod loader</string>
-    <string name="mod_manager_toggle_failed">Couldn\'t enable or disable this mod</string>
+    <string name="mod_manager_toggle_failed">Couldn\'t turn this on or off</string>
     <string-array name="mod_manager_sort_names">
         <item>Name</item>
         <item>Downloads</item>
@@ -540,14 +563,24 @@
         <item>Newest</item>
         <item>Updated</item>
     </string-array>
-    <string name="main_manage_mods_no_loader">Mods need a Fabric, Quilt, Forge or NeoForge instance</string>
     <string name="dashboard_edit_instance">Edit instance</string>
     <string name="dashboard_instance_details">%1$s · Minecraft %2$s</string>
     <string name="dashboard_vanilla">Vanilla</string>
     <string name="dashboard_renderer">Renderer: %1$s</string>
-    <string name="dashboard_mods">Mods</string>
-    <string name="dashboard_mods_empty">No mods yet. Browse Modrinth</string>
-    <string name="dashboard_mods_no_loader">Needs Fabric, Quilt, Forge or NeoForge</string>
+    <string name="dashboard_mods">Mods &amp; packs</string>
+    <string name="dashboard_mods_empty">Nothing installed yet</string>
+    <plurals name="dashboard_mod_count">
+        <item quantity="one">%d mod</item>
+        <item quantity="other">%d mods</item>
+    </plurals>
+    <plurals name="dashboard_resource_pack_count">
+        <item quantity="one">%d pack</item>
+        <item quantity="other">%d packs</item>
+    </plurals>
+    <plurals name="dashboard_shader_count">
+        <item quantity="one">%d shader</item>
+        <item quantity="other">%d shaders</item>
+    </plurals>
     <string name="dashboard_controls">Controls</string>
     <string name="dashboard_controls_layout">Layout: %1$s</string>
     <string name="dashboard_game_folder">Game folder</string>
@@ -559,11 +592,16 @@
     <string name="mod_browser_search_hint">Search Modrinth</string>
     <string name="mod_browser_filter">%1$s mods for Minecraft %2$s</string>
     <string name="mod_browser_filter_any_version">%1$s mods (Minecraft version unknown, showing all)</string>
+    <string name="mod_browser_filter_resource_packs">Resource packs for Minecraft %1$s</string>
+    <string name="mod_browser_filter_resource_packs_any_version">Resource packs (Minecraft version unknown, showing all)</string>
+    <string name="mod_browser_filter_shaders">Shaders for Minecraft %1$s</string>
+    <string name="mod_browser_filter_shaders_any_version">Shaders (Minecraft version unknown, showing all)</string>
     <string name="mod_browser_meta">by %1$s · %2$s downloads</string>
     <string name="mod_browser_installed">Installed</string>
-    <string name="mod_browser_no_results">No mods found</string>
+    <string name="mod_browser_no_results">Nothing found</string>
     <string name="mod_browser_error">Couldn\'t reach Modrinth. Check your internet connection.</string>
     <string name="mod_browser_no_versions">This mod has no version for %1$s on Minecraft %2$s</string>
+    <string name="mod_browser_no_versions_pack">There\'s no version of this for Minecraft %1$s</string>
     <string name="mod_browser_install">Install</string>
     <string name="mod_browser_version_installed">%1$s (installed)</string>
     <string name="mod_browser_resolving_dependencies">Checking required mods…</string>
@@ -572,8 +610,12 @@
         <item quantity="one">Installed %1$s and %2$d required mod</item>
         <item quantity="other">Installed %1$s and %2$d required mods</item>
     </plurals>
+    <plurals name="mod_browser_enabled_dependencies">
+        <item quantity="one">Turned on %d required mod that was off</item>
+        <item quantity="other">Turned on %d required mods that were off</item>
+    </plurals>
     <string name="mod_browser_missing_dependencies">Installed %1$s, but these required mods couldn\'t be found for this version: %2$s</string>
-    <string name="mod_browser_install_failed">Failed to install the mod</string>
+    <string name="mod_browser_install_failed">Failed to install</string>
     <string-array name="mod_browser_sort_names">
         <item>Relevance</item>
         <item>Downloads</item>

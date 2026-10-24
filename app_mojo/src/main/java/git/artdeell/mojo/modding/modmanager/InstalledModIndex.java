@@ -34,11 +34,11 @@ public class InstalledModIndex {
     }
 
     /**
-     * Hash every mod in the folder and ask Modrinth what they are. Mods that didn't come from
-     * Modrinth are simply missing from the index.
+     * Hash every file in the folder and ask Modrinth what they are. Files that didn't come from
+     * Modrinth, and folders, are simply missing from the index.
      */
-    public static InstalledModIndex build(ModrinthModApi api, File modsDirectory) {
-        File[] files = modsDirectory.listFiles((dir, name) -> ModInfo.isModFileName(name));
+    public static InstalledModIndex build(ModrinthModApi api, File directory, ContentType type) {
+        File[] files = directory.listFiles(type::isContentFile);
         if(files == null) return new InstalledModIndex();
         InstalledModIndex index = build(api, Arrays.asList(files));
         return index != null ? index : new InstalledModIndex();
@@ -53,6 +53,7 @@ public class InstalledModIndex {
         if(files.isEmpty()) return index;
         HashMap<String, File> filesByHash = new HashMap<>(files.size());
         for(File file : files) {
+            if(file.isDirectory()) continue;
             String hash = sha1(file);
             if(hash != null) filesByHash.put(hash, file);
         }
