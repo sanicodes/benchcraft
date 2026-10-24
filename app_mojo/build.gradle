@@ -25,7 +25,7 @@ def getVersionName = {
     }else {
         def branchName = currentBranch.getName()
         def commitAbbreviation = latestCommit.abbreviatedId
-        return "justicia-${dateToday}-${commitAbbreviation}-${branchName}"
+        return "benchcraft-${dateToday}-${commitAbbreviation}-${branchName}"
     }
 }
 
@@ -40,7 +40,7 @@ def getCFApiKey = {
     return "DUMMY"
 }
 
-// Package ID of Benchcraft builds, so they can be installed next to the official MojoLauncher
+// Differs from MojoLauncher's package ID, so Benchcraft can be installed next to it
 def benchcraftApplicationId = "io.github.sanicodes.benchcraft"
 
 configurations {
@@ -81,7 +81,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "git.artdeell.mjlaunch"
+        applicationId benchcraftApplicationId
         minSdkVersion 21
         targetSdkVersion 36
         versionCode getDateSeconds()
@@ -111,8 +111,8 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
-            resValue 'string', 'application_package', 'git.artdeell.mjlaunch.debug'
-            resValue 'string', 'storageProviderAuthorities', 'git.artdeell.mjlaunch.scoped.gamefolder.debug'
+            resValue 'string', 'application_package', "${benchcraftApplicationId}.debug"
+            resValue 'string', 'storageProviderAuthorities', "${benchcraftApplicationId}.scoped.gamefolder.debug"
         }
         proguard {
             initWith debug
@@ -132,8 +132,8 @@ android {
             // defaultConfig already set
             // multiDexEnabled = true
             // debuggable = true
-            resValue 'string', 'storageProviderAuthorities', 'git.artdeell.mjlaunch.scoped.gamefolder'
-            resValue 'string', 'application_package', 'git.artdeell.mjlaunch'
+            resValue 'string', 'storageProviderAuthorities', "${benchcraftApplicationId}.scoped.gamefolder"
+            resValue 'string', 'application_package', benchcraftApplicationId
         }
         gplay {
             initWith release
@@ -145,14 +145,12 @@ android {
             signingConfig signingConfigs.publicBuild
             matchingFallbacks += List.of("release")
         }
-        // Release build with its own package ID (set in androidComponents below). Signed with the
-        // repo's debug key, which is public, so it's meant for personal installs
+        // Release build signed with the repo's debug key, which is public, so it's meant for
+        // personal installs
         benchcraft {
             initWith release
             signingConfig signingConfigs.customDebug
             matchingFallbacks += List.of("release")
-            resValue 'string', 'storageProviderAuthorities', "${benchcraftApplicationId}.scoped.gamefolder"
-            resValue 'string', 'application_package', benchcraftApplicationId
         }
     }
 
@@ -184,13 +182,6 @@ android {
 
     buildFeatures {
         buildConfig true
-    }
-}
-
-androidComponents {
-    // Build types can only add a suffix to the package ID, so replace it here instead
-    onVariants(selector().withBuildType("benchcraft")) { variant ->
-        variant.applicationId.set(benchcraftApplicationId)
     }
 }
 
