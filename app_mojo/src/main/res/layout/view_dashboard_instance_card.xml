@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard_instance_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_card"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_heavy">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.kdt.mcgui.mcVersionSpinner
+            android:id="@+id/mc_version_spinner"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_52sdp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/spinner_arrow_down"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:drawableEndPadding="@dimen/_1sdp"
+            app:drawableEndSize="@dimen/padding_heavy"
+            app:drawableStartIntegerScaling="true"
+            app:drawableStartSize="@dimen/_44sdp" />
+
+        <ImageButton
+            android:id="@+id/edit_profile_button"
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/dashboard_edit_instance"
+            android:padding="@dimen/padding_heavy"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_px_edit" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/dashboard_instance_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_78sdp"
+        android:layout_marginEnd="@dimen/padding_heavy"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/_10ssp"
+        tools:text="Fabric · Minecraft 1.21.1" />
+
+    <TextView
+        android:id="@+id/dashboard_instance_renderer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_78sdp"
+        android:layout_marginEnd="@dimen/padding_heavy"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_10ssp"
+        tools:text="Renderer: LTW" />
+</LinearLayout>

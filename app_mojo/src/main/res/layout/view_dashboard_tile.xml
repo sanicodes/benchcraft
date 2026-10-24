@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/_56sdp"
+    android:background="@drawable/background_tile"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_heavy">
+
+    <ImageView
+        android:id="@+id/dashboard_tile_icon"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:scaleType="fitCenter"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/ic_px_mods" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/padding_heavy"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dashboard_tile_title"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAllCaps="true"
+            tools:text="Mods" />
+
+        <TextView
+            android:id="@+id/dashboard_tile_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_9ssp"
+            android:visibility="gone"
+            tools:text="12 mods, 2 disabled"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

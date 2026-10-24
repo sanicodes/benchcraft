@@ -70,10 +70,12 @@ public class mcVersionSpinner extends ExtendedTextView {
     });
 
 
+    private OnInstanceSelectedListener mSelectionListener;
+
     /** Set the selection AND saves it as a shared preference */
     public void setProfileSelection(int position){
-        setSelection(position);
         Instances.setSelectedInstance((DisplayInstance) mProfileAdapter.getItem(position));
+        setSelection(position);
     }
 
     public void setSelection(int position){
@@ -81,6 +83,15 @@ public class mcVersionSpinner extends ExtendedTextView {
         mProfileAdapter.setView(this, position, false);
         mSelectedIndex = position;
         mProfileAdapter.applySelectionIndex(mSelectedIndex);
+        if(mSelectionListener != null) mSelectionListener.onInstanceSelected();
+    }
+
+    public void setOnInstanceSelectedListener(OnInstanceSelectedListener listener) {
+        mSelectionListener = listener;
+    }
+
+    public interface OnInstanceSelectedListener {
+        void onInstanceSelected();
     }
 
     public void openProfileEditor(FragmentActivity fragmentActivity) {

@@ -23,8 +23,12 @@ public abstract class ModInfo {
         return name.endsWith(".jar") || name.endsWith(".jar" + DISABLED_SUFFIX);
     }
 
+    public static boolean isDisabledFileName(String name) {
+        return name.endsWith(DISABLED_SUFFIX);
+    }
+
     public boolean isEnabled() {
-        return !jarFile.getName().endsWith(DISABLED_SUFFIX);
+        return !isDisabledFileName(jarFile.getName());
     }
 
     /**

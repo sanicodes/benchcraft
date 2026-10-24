@@ -86,14 +86,15 @@ public class InstanceAdapter extends BaseAdapter {
         else if (Instance.VERSION_LATEST_SNAPSHOT.equalsIgnoreCase(versionName))
             versionName = v.getContext().getString(R.string.profiles_latest_snapshot);
 
-        if (versionName == null && profileName != null)
+        // The selected instance view on the home screen lists the version separately
+        if ((versionName == null || !displaySelection) && profileName != null)
             extendedTextView.setText(profileName);
         else if (versionName != null && profileName == null)
             extendedTextView.setText(versionName);
         else extendedTextView.setText(String.format("%s - %s", profileName, versionName));
 
-        // Set selected background if needed
-        if(idx == mSelectionIndex && displaySelection) {
+        if(!displaySelection) return;
+        if(idx == mSelectionIndex) {
             extendedTextView.setBackgroundColor(ColorUtils.setAlphaComponent(Color.WHITE, 60));
         }else {
             extendedTextView.setBackgroundColor(Color.TRANSPARENT);

@@ -541,6 +541,21 @@
         <item>Updated</item>
     </string-array>
     <string name="main_manage_mods_no_loader">Mods need a Fabric, Quilt, Forge or NeoForge instance</string>
+    <string name="dashboard_edit_instance">Edit instance</string>
+    <string name="dashboard_instance_details">%1$s · Minecraft %2$s</string>
+    <string name="dashboard_vanilla">Vanilla</string>
+    <string name="dashboard_renderer">Renderer: %1$s</string>
+    <string name="dashboard_mods">Mods</string>
+    <string name="dashboard_mods_empty">No mods yet. Browse Modrinth</string>
+    <string name="dashboard_mods_no_loader">Needs Fabric, Quilt, Forge or NeoForge</string>
+    <string name="dashboard_controls">Controls</string>
+    <string name="dashboard_controls_layout">Layout: %1$s</string>
+    <string name="dashboard_game_folder">Game folder</string>
+    <string name="dashboard_game_folder_hint">Saves, configs, resource packs</string>
+    <string name="dashboard_run_jar">Run .jar</string>
+    <string name="dashboard_run_jar_hint">Installers like OptiFine</string>
+    <string name="dashboard_share_logs">Share logs</string>
+    <string name="dashboard_share_logs_hint">Send the last game log</string>
     <string name="mod_browser_search_hint">Search Modrinth</string>
     <string name="mod_browser_filter">%1$s mods for Minecraft %2$s</string>
     <string name="mod_browser_filter_any_version">%1$s mods (Minecraft version unknown, showing all)</string>

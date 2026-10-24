@@ -55,7 +55,7 @@ public class ModTarget {
     }
 
     @Nullable
-    private static String detectMinecraftVersion(String versionId) {
+    public static String detectMinecraftVersion(String versionId) {
         if(versionId == null) return null;
         try {
             JVersionList.Version version = Tools.getVersionInfo(versionId, true);
@@ -92,6 +92,10 @@ public class ModTarget {
     }
 
     public String getLoaderName() {
+        return getLoaderName(platform);
+    }
+
+    public static String getLoaderName(Platform platform) {
         switch (platform) {
             case FABRIC: return "Fabric";
             case QUILT: return "Quilt";
